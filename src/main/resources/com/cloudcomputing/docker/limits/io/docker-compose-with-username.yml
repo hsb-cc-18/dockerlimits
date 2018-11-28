@@ -1,0 +1,7 @@
+x-hsb-username: 'czoeller'
+version: '3'
+services:
+  web:
+    image: "nginx:latest"
+    ports:
+      - "8080:8080"
