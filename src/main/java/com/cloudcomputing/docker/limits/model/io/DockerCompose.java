@@ -1,4 +1,4 @@
-package com.cloudcomputing.docker.limits.io;
+package com.cloudcomputing.docker.limits.model.io;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,7 +9,7 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DockerComposeFile {
+public class DockerCompose {
 
     @JsonProperty("x-hsb-username")
     private String hsbUsername;
