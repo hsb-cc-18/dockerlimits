@@ -1,5 +1,7 @@
 package com.cloudcomputing.docker.limits;
 
+import com.cloudcomputing.docker.limits.services.stats.DockerStatsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
+	@Autowired
+	DockerStatsService dockerStatsService;
+
 	public Application() {
+
 	}
 
 	public static void main(String[] args) {
@@ -22,6 +28,6 @@ public class Application implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-
+		dockerStatsService.getStats();
 	}
 }
