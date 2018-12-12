@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class DockerStatsServiceImpl implements DockerStatsService {
+class DockerStatsServiceImpl implements DockerStatsService {
 
     @Override
     public String getStats() {

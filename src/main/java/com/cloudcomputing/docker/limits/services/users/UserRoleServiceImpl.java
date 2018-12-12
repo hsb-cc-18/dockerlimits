@@ -1,10 +1,10 @@
-package com.cloudcomputing.docker.limits.services;
+package com.cloudcomputing.docker.limits.services.users;
 
 import com.cloudcomputing.docker.limits.model.userrole.Role;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserRoleServiceImpl implements UserRoleService {
+class UserRoleServiceImpl implements UserRoleService {
     @Override
     public Role getRoleForUsername(String username) {
         Role role;

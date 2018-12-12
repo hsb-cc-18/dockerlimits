@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application implements CommandLineRunner {
 
 	@Autowired
-	DockerStatsService dockerStatsService;
+	private DockerStatsService dockerStatsService;
 
 	public Application() {
 
