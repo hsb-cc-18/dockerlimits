@@ -9,11 +9,13 @@ import com.github.dockerjava.api.model.Statistics;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
+import com.github.rozidan.springboot.logger.Loggable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Loggable
 class DockerStatsServiceImpl implements DockerStatsService {
 
     @Override

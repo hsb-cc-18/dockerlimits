@@ -1,9 +1,11 @@
 package com.cloudcomputing.docker.limits.services.users;
 
 import com.cloudcomputing.docker.limits.model.userrole.Role;
+import com.github.rozidan.springboot.logger.Loggable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Loggable
 class UserRoleServiceImpl implements UserRoleService {
     @Override
     public Role getRoleForUsername(String username) {

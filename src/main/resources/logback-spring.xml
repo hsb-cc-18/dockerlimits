@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration
+        xmlns="http://ch.qos.logback/xml/ns/logback"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd"
+        debug="false"><!-- This will give you some valuable info about logback config upon runtime. Remove this for production. -->
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.cloudcomputing.docker" level="TRACE"/>
+    <logger name="com.github.dockerjava" level="ERROR"/>
+    <!--<logger name="com.github.dockerjava.jaxrs" level="DEBUG"/>
+    <logger name="com.github.dockerjava.netty" level="DEBUG"/>
+    <logger name="org.apache.http.impl.conn" level="DEBUG"/>-->
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
