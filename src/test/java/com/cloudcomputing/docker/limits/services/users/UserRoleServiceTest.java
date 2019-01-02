@@ -17,8 +17,8 @@ public class UserRoleServiceTest {
 
     @Test
     public void getRoleForUsername() {
-        Assertions.assertThat(userRoleService.getRoleForUsername("czoeller")).isEqualTo(Role.HSB_STUDENT);
-        Assertions.assertThat(userRoleService.getRoleForUsername("mitarbeiter")).isEqualTo(Role.HSB_MEMBER);
-        Assertions.assertThat(userRoleService.getRoleForUsername("prof")).isEqualTo(Role.HSB_PROF);
+        Assertions.assertThat(userRoleService.getRoleForUsername(UserRoleService.CZOELLER)).isEqualTo(Role.HSB_STUDENT);
+        Assertions.assertThat(userRoleService.getRoleForUsername(UserRoleService.EMPLOYE)).isEqualTo(Role.HSB_MEMBER);
+        Assertions.assertThat(userRoleService.getRoleForUsername(UserRoleService.PROF)).isEqualTo(Role.HSB_PROF);
     }
 }

@@ -4,20 +4,25 @@ import com.cloudcomputing.docker.limits.model.userrole.Role;
 import com.github.rozidan.springboot.logger.Loggable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Stub for UserManagement interface like LDAP.
+ */
 @Service
 @Loggable
 class UserRoleServiceImpl implements UserRoleService {
+
     @Override
     public Role getRoleForUsername(String username) {
         Role role;
         switch (username) {
-            case "czoeller":
+            case STUDENT:
+            case CZOELLER:
                 role = Role.HSB_STUDENT;
                 break;
-            case "mitarbeiter":
+            case EMPLOYE:
                 role = Role.HSB_MEMBER;
                 break;
-            case "prof":
+            case PROF:
                 role = Role.HSB_PROF;
                 break;
             default:
