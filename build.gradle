@@ -15,16 +15,23 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
+    id 'com.gradle.build-scan' version '2.1'
 }
 
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply from: rootProject.file('gradle/codecov.gradle')
 
 group 'com.cloudcomputing.docker'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+}
 
 repositories {
     mavenCentral()

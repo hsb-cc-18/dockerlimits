@@ -1,1 +1,1 @@
-# dockerlimits
+# dockerlimits [![Build Status](https://travis-ci.org/hsb-cc-18/dockerlimits.svg?branch=master)](https://travis-ci.org/hsb-cc-18/dockerlimits) [![codecov.io](https://codecov.io/github/hsb-cc-18/dockerlimits/coverage.svg?branch=master)](https://codecov.io/github/hsb-cc-18/dockerlimits?branch=master)
