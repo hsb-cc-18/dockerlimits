@@ -33,7 +33,7 @@ class DockerStatsServiceImpl implements DockerStatsService {
         ExecCreateCmdResponse exec = docker.execCreateCmd(container.getId()).withAttachStdout(true).withAttachStderr(true).withCmd("/bin/bash").exec();
 
         System.out.println("Created exec " + exec.toString());
-
+        String hostConfig = "";
         try {
             final SingleStatCallback statsCallback = docker.statsCmd(container.getId()).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
@@ -42,12 +42,14 @@ class DockerStatsServiceImpl implements DockerStatsService {
 
             final InspectContainerResponse exec1 = docker.inspectContainerCmd(container.getId()).exec();
             System.out.println("Memory limit:" + exec1.getHostConfig().getMemory());
+
+            hostConfig = exec1.getHostConfig().toString();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             docker.removeContainerCmd(container.getId()).withForce(true).exec();
         }
 
-        return "";
+        return hostConfig;
     }
 }

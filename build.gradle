@@ -31,6 +31,23 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integrationTest/java')
+        }
+        resources.srcDir file('src/integrationTest/resources')
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
+}
+
 dependencies {
     compile 'javax.activation:activation:1.1.1'
     compileOnly 'com.google.code.findbugs:jsr305:3.0.0'
@@ -46,3 +63,11 @@ dependencies {
     testCompile "org.assertj:assertj-core:3.11.1"
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+integrationTest.mustRunAfter test
