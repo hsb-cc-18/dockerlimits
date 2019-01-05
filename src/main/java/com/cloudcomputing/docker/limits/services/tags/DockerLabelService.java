@@ -1,5 +1,6 @@
 package com.cloudcomputing.docker.limits.services.tags;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface DockerLabelService {
@@ -11,12 +12,12 @@ public interface DockerLabelService {
      * @param containerId to query
      * @return the owners username
      */
-    String getUsername(String containerId);
+    String getUsername(@Nonnull String containerId);
 
     /**
      * Get containers owned by a specific username
      * @param username the username of the owner
      * @return the containerIds owner by the user
      */
-    List<String> getContainers(String username);
+    List<String> getContainers(@Nonnull String username);
 }
