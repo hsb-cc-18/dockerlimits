@@ -7,7 +7,6 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
-import com.github.dockerjava.api.model.HostConfig;
 import com.google.common.collect.ImmutableMap;
 import org.junit.After;
 import org.junit.Before;
@@ -43,8 +42,7 @@ public class DockerLabelServiceTest {
 
         try(CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd("busybox").withCmd("sleep", "9999")
                                                        .withName(containerName)
-                                                       .withLabels(TEST_LABELS)
-                                                       .withHostConfig(HostConfig.newHostConfig())) {
+                                                       .withLabels(TEST_LABELS)) {
             final CreateContainerResponse container = createContainerCmd.exec();
 
             System.out.println("Created container " + container.toString());

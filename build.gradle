@@ -73,7 +73,7 @@ dependencies {
     implementation  'com.github.docker-java:docker-java:3.1.0-rc-7'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
-    implementation 'com.github.palantir.docker-compose-rule:docker-compose-rule-core:0.34.0'
+    implementation 'com.github.palantir.docker-compose-rule:docker-compose-rule-junit4:0.34.0'
     testCompile "org.assertj:assertj-core:3.11.1"
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
