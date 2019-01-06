@@ -1,5 +1,5 @@
 x-hsb-username: 'czoeller'
-version: '3.4'
+version: '2.2'
 services:
   web:
     image: "nginx:latest"

@@ -32,6 +32,7 @@ public class DockerComposeReaderTest {
     public void readResources() throws IOException {
         final InputStream dockerComposeYML = getClass().getResource("docker-compose-with-username-and-service.yml").openStream();
         final DockerCompose dockerCompose = dockerComposeReader.read(dockerComposeYML);
+        assertThat(dockerCompose.getVersion()).isEqualTo("2.2");
         assertThat(dockerCompose.getServices()).isNotEmpty();
         assertThat(dockerCompose.getServices()).containsKey("web");
         final ServiceSpec serviceWeb = Objects.requireNonNull(dockerCompose.getServices()).get("web");
