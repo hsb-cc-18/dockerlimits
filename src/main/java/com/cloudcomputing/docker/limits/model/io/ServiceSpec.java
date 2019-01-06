@@ -22,7 +22,9 @@ public class ServiceSpec {
     public ImmutableList<String> networks;
 
     @Nullable
-    @JsonProperty("deploy")
-    public Deploy deploy;
+    public Integer cpu_percent;
+
+    @Nullable
+    public String mem_limit;
 
 }

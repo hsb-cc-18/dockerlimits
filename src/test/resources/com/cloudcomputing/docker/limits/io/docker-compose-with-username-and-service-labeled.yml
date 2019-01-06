@@ -1,9 +1,11 @@
 x-hsb-username: 'czoeller'
-version: '3'
+version: '2.2'
 services:
   web:
     image: "nginx:latest"
+    container_name: "nginx"
     ports:
       - "8080:8080"
-    cpu_percent: 50
+    labels:
+      - "hsb.username=czoeller"
     mem_limit: 50M
