@@ -2,7 +2,6 @@ package com.cloudcomputing.docker.limits.model.io;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nullable;
@@ -14,17 +13,28 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceSpec {
 
-    @JsonProperty("image")
     public String image;
 
     @Nullable
-    @JsonProperty("networks")
+    public String container_name;
+
+    @Nullable
     public ImmutableList<String> networks;
 
     @Nullable
-    public Integer cpu_percent;
+    public ImmutableList<String> ports;
 
     @Nullable
-    public String mem_limit;
+    public ImmutableList<String> labels;
 
+    @Nullable
+    public Double cpus;
+
+    @Nullable
+    public Integer cpu_count, cpu_shares, cpu_percent,  cpu_quota;
+
+    @Nullable
+    public String mem_limit, cpu_period, cpuset, domainname,
+            hostname, ipc, mac_address, memswap_limit, mem_swappiness, mem_reservation, oom_kill_disable, oom_score_adj,
+            privileged, read_only, shm_size, stdin_open, tty, user, working_dir;
 }
