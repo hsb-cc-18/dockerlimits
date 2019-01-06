@@ -74,6 +74,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
     testCompile "org.assertj:assertj-core:3.11.1"
+    testCompile group: 'com.shazam', name: 'shazamcrest', version: '0.11'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
