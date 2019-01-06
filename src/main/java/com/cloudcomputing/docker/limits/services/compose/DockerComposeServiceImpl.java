@@ -24,11 +24,6 @@ public class DockerComposeServiceImpl implements DockerComposeService {
     public void startComposeFile(@Nonnull File dockerComposeFilePath) {
         DockerComposeRule dockerComposeRule;
 
-        //TODO: 1 Read DockerCompose object with DockerComposeReader
-        //TODO: 2 User hsbUsername from dockerCompose object and check that all services tagged with the username tag. Fix if required
-        //TODO: 3 Write new DockerCompose file with DockerComposeWrite (newDockerComposeFile.yml)
-        //TODO: 4 Path the File to the following Builder method .file(newDockerComposeFile.getAbsolutePath())
-
         try {
             dockerComposeRule = DockerComposeRule.builder()
                                                  .file(dockerComposeFilePath.getAbsolutePath())
