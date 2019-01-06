@@ -1,20 +1,22 @@
 package com.cloudcomputing.docker.limits.services.stats;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Statistics;
 import com.github.rozidan.springboot.logger.Loggable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 @Service
 @Loggable
 class DockerStatsServiceImpl implements DockerStatsService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private DockerClient dockerClient;
 
@@ -24,33 +26,20 @@ class DockerStatsServiceImpl implements DockerStatsService {
     }
 
     @Override
-    public String getStats() {
-
-        String containerName = "mybusybox";
-        CreateContainerResponse container = dockerClient.createContainerCmd("busybox").withCmd("sleep", "9999")
-                                                        .withName(containerName).withHostConfig(new HostConfig().withMemory(100000000L)).exec();
-        System.out.println("Created container " + container.toString());
-
-        dockerClient.startContainerCmd(container.getId()).exec();
-
-        ExecCreateCmdResponse exec = dockerClient.execCreateCmd(container.getId()).withAttachStdout(true).withAttachStderr(true).withCmd("/bin/bash").exec();
-
-        System.out.println("Created exec " + exec.toString());
+    public String getStats(@Nonnull String containerId) {
         String hostConfig = "";
         try {
-            final SingleStatCallback statsCallback = dockerClient.statsCmd(container.getId()).exec(new SingleStatCallback());
+            final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
             final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No Stats received"));
-            System.out.println("Memory limit (stats):" + latestStats.getMemoryStats().getLimit());
+            logger.debug("Memory limit (stats): {}", latestStats.getMemoryStats().getLimit());
 
-            final InspectContainerResponse exec1 = dockerClient.inspectContainerCmd(container.getId()).exec();
-            System.out.println("Memory limit:" + exec1.getHostConfig().getMemory());
+            final InspectContainerResponse exec1 = dockerClient.inspectContainerCmd(containerId).exec();
+            logger.debug("Memory limit (inspect): {}", exec1.getHostConfig().getMemory());
 
             hostConfig = exec1.getHostConfig().toString();
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            dockerClient.removeContainerCmd(container.getId()).withForce(true).exec();
+            logger.error("Failed to read stats", e);
         }
 
         return hostConfig;
