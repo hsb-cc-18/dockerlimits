@@ -1,4 +1,4 @@
-package com.cloudcomputing.docker.limits.services.tags;
+package com.cloudcomputing.docker.limits.services.label;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.ListContainersCmd;

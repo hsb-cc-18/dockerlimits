@@ -1,6 +1,6 @@
 package com.cloudcomputing.docker.limits.services.compose;
 
-import com.cloudcomputing.docker.limits.services.tags.DockerLabelService;
+import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

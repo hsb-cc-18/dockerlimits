@@ -1,4 +1,4 @@
-package com.cloudcomputing.docker.limits.services.tags;
+package com.cloudcomputing.docker.limits.services.label;
 
 import javax.annotation.Nonnull;
 import java.util.List;
