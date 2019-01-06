@@ -28,7 +28,7 @@ class DockerStatsServiceImpl implements DockerStatsService {
 
         String containerName = "mybusybox";
         CreateContainerResponse container = dockerClient.createContainerCmd("busybox").withCmd("sleep", "9999")
-                                                  .withName(containerName).withHostConfig(HostConfig.newHostConfig().withMemory(100000000L)).exec();
+                                                        .withName(containerName).withHostConfig(new HostConfig().withMemory(100000000L)).exec();
         System.out.println("Created container " + container.toString());
 
         dockerClient.startContainerCmd(container.getId()).exec();
