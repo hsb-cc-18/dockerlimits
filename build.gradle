@@ -69,11 +69,15 @@ dependencies {
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.7"
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.7"
     implementation 'org.apache.commons:commons-lang3:3.4'
-    implementation 'com.google.guava:guava:19.0'
     implementation 'com.github.docker-java:docker-java:3.1.0-rc-7'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
     testCompile "org.assertj:assertj-core:3.11.1"
+    // Junit docker rule, following 3 dependencies. https://github.com/tdomzal/junit-docker-rule/issues/42:
+    testCompile 'com.github.tdomzal:junit-docker-rule:0.4.1'
+    testCompile 'org.glassfish.jersey.inject:jersey-hk2:2.27'
+    testCompile 'org.glassfish.jersey.bundles.repackaged:jersey-guava:2.25.1'
+
     testCompile group: 'com.shazam', name: 'shazamcrest', version: '0.11'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }

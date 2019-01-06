@@ -60,13 +60,13 @@ public class DockerComposeWriterTest {
     }
 
     @Test
-    public void testWrittenFileIsSameAsRed() throws IOException {
+    public void testWrittenFileIsSameAsRed() {
         Assert.assertThat("The origin and red objects should be equal", dockerComposeRed, sameBeanAs(dockerCompose).ignoring("hsbUsername"));
         assertThat(dockerComposeRed.getHsbUsername()).as("The username should be removed").isNullOrEmpty();
     }
 
     @Test
-    public void testWrittenFileIsNotSameAsRedIfModified() throws IOException {
+    public void testWrittenFileIsNotSameAsRedIfModified() {
         dockerCompose.getServices().get("web").mem_limit = "12M";
         Assert.assertThat("The objects are not equal", dockerComposeRed, not(sameBeanAs(dockerCompose).ignoring("hsbUsername")));
         assertThat(dockerComposeRed.getHsbUsername()).as("The username should be removed").isNullOrEmpty();

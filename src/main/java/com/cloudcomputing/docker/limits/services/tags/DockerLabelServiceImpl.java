@@ -38,6 +38,7 @@ public class DockerLabelServiceImpl implements DockerLabelService {
     @Override
     public String getUsername(@Nonnull String containerId) {
         final ListContainersCmd listContainersCmd = dockerClient.listContainersCmd()
+                                                                .withShowAll(true)
                                                                 .withIdFilter(Lists.newArrayList(containerId));
 
         return queryContainers(listContainersCmd).stream()
@@ -51,6 +52,7 @@ public class DockerLabelServiceImpl implements DockerLabelService {
     public List<String> getContainers(@Nonnull String username) {
         final ImmutableMap<String, String> labels = ImmutableMap.of(DockerLabelService.LABEL_USER_KEY, username);
         final ListContainersCmd listContainersCmd = dockerClient.listContainersCmd()
+                                                                .withShowAll(true)
                                                                 .withLabelFilter(labels);
         return queryContainers(listContainersCmd).stream().map(Container::getId).collect(Collectors.toList());
     }
