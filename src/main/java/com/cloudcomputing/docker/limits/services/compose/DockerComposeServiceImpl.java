@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
 
 @Service
 public class DockerComposeServiceImpl implements DockerComposeService {
@@ -21,19 +22,20 @@ public class DockerComposeServiceImpl implements DockerComposeService {
     }
 
     @Override
-    public void startComposeFile(@Nonnull File dockerComposeFilePath) {
-        DockerComposeRule dockerComposeRule;
-
+    public DockerComposeRule startComposeFile(@Nonnull File dockerComposeFilePath) {
+        DockerComposeRule dockerComposeRule = DockerComposeRule.builder()
+                                                               .file(dockerComposeFilePath.getAbsolutePath())
+                                                               .machine(dockerMachine)
+                                                               .shutdownStrategy(ShutdownStrategy.KILL_DOWN)
+                                                               .build();
         try {
-            dockerComposeRule = DockerComposeRule.builder()
-                                                 .file(dockerComposeFilePath.getAbsolutePath())
-                                                 .machine(dockerMachine)
-                                                 .shutdownStrategy(ShutdownStrategy.SKIP)
-                                                 .build();
-
             dockerComposeRule.before();
-        } catch (Exception e) {
-            logger.error("Exception", e);
+        } catch (InterruptedException | IOException e) {
+            Thread.currentThread().interrupt();
+            logger.error("Error while starting compose", e);
+            throw new IllegalStateException("Error while starting compose.");
         }
+
+        return dockerComposeRule;
     }
 }

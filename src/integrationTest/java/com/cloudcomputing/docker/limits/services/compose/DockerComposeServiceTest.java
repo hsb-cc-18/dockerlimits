@@ -1,6 +1,7 @@
 package com.cloudcomputing.docker.limits.services.compose;
 
 import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
+import com.palantir.docker.compose.DockerComposeRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,21 +29,21 @@ public class DockerComposeServiceTest {
     @Autowired
     private DockerLabelService dockerLabelService;
 
+    private DockerComposeRule dockerComposeRule;
+
     @Before
-    public void setUp() throws IOException, InterruptedException {
-
-
+    public void setUp() throws URISyntaxException {
+        final File dockerComposeFile = new File(getClass().getResource("../../io/docker-compose-with-username-and-service-labeled.yml").toURI());
+        dockerComposeRule = dockerComposeService.startComposeFile(dockerComposeFile);
     }
 
     @After
     public void tearDown() {
-
+        dockerComposeRule.after();
     }
 
     @Test
-    public void testComposedContainerHasLabel() throws URISyntaxException {
-        final File dockerComposeFile = new File(getClass().getResource("../../io/docker-compose-with-username-and-service-labeled.yml").toURI());
-        dockerComposeService.startComposeFile(dockerComposeFile);
+    public void testComposedContainerHasLabel() {
         assertThat(dockerLabelService.getContainers("czoeller")).hasSize(1);
     }
 
