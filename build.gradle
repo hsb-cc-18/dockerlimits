@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.github.docker-java:docker-java:3.1.0-rc-7'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testCompile 'org.hibernate.validator:hibernate-validator-test-utils:6.0.13.Final'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
     implementation 'com.github.palantir.docker-compose-rule:docker-compose-rule-junit4:0.34.0'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

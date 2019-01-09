@@ -31,30 +31,41 @@ public class DockerComposeValidatorTest {
         when(dockerCompose.getVersion()).thenReturn("2.4");
         when(dockerCompose.getHsbUsername()).thenReturn("czoeller");
 
-        final Set<ConstraintViolation<DockerCompose>> errors = dockerComposeValidator.validate(dockerCompose);
+        final Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
 
-        ConstraintViolationSetAssert.assertThat(errors).hasNoViolations();
+        ConstraintViolationSetAssert.assertThat(violations).hasNoViolations();
     }
 
     @Test
     public void testWithNoVersion() {
         when(dockerCompose.getVersion()).thenReturn(null);
 
-        final Set<ConstraintViolation<DockerCompose>> errors = dockerComposeValidator.validate(dockerCompose);
+        final Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
 
-        ConstraintViolationSetAssert.assertThat(errors).hasViolationOnPath("version");
+        ConstraintViolationSetAssert.assertThat(violations).hasViolationOnPath("version");
     }
 
     @Test
-    public void testUnlabeledService() {
+    public void testLabeledService() {
         final ServiceSpec nginx = new ServiceSpec();
-        nginx.labels = ImmutableList.of(DockerLabelService.LABEL_USER_KEY, UserRoleService.STUDENT);
+        nginx.labels = ImmutableList.of(DockerLabelService.LABEL_USER_KEY + "=" +  UserRoleService.STUDENT);
         final ImmutableMap<String, ServiceSpec> services = ImmutableMap.<String, ServiceSpec>builder().put("nginx", nginx).build();
 
+        when(dockerCompose.getVersion()).thenReturn("2.4");
+        when(dockerCompose.getHsbUsername()).thenReturn("czoeller");
+
+        // Test with label
         when(dockerCompose.getServices()).thenReturn(services);
 
-        final Set<ConstraintViolation<DockerCompose>> errors = dockerComposeValidator.validate(dockerCompose);
+        Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
+        ConstraintViolationSetAssert.assertThat(violations).hasNoViolations();
 
-        ConstraintViolationSetAssert.assertThat(errors).hasViolationOnPath("getVersion");
+        // Test without label
+        services.get("nginx").labels = ImmutableList.<String>builder().build();
+        when(dockerCompose.getServices()).thenReturn(services);
+        violations = dockerComposeValidator.validate(dockerCompose);
+        ConstraintViolationSetAssert.assertThat(violations).hasViolationOnPath("services[nginx].labels");
+
     }
+
 }
