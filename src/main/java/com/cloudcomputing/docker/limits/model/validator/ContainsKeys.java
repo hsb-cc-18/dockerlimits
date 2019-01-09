@@ -1,4 +1,4 @@
-package com.cloudcomputing.docker.limits.model.io;
+package com.cloudcomputing.docker.limits.model.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

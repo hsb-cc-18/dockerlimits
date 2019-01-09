@@ -1,5 +1,6 @@
 package com.cloudcomputing.docker.limits.model.io;
 
+import com.cloudcomputing.docker.limits.model.validator.DockerComposeValidator;
 import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
 import com.cloudcomputing.docker.limits.services.users.UserRoleService;
 import com.google.common.collect.ImmutableList;
