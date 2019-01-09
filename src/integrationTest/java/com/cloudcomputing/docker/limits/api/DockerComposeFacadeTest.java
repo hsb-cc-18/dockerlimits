@@ -2,6 +2,7 @@ package com.cloudcomputing.docker.limits.api;
 
 import com.cloudcomputing.docker.limits.io.DockerComposeReader;
 import com.cloudcomputing.docker.limits.io.DockerComposeWriter;
+import com.cloudcomputing.docker.limits.model.validator.DockerComposeValidator;
 import com.cloudcomputing.docker.limits.services.compose.DockerComposeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,8 @@ public class DockerComposeFacadeTest {
     private DockerComposeWriter dockerComposeWriter;
     @MockBean
     private DockerComposeService dockerComposeServiceMock;
+    @MockBean
+    private DockerComposeValidator dockerComposeValidator;
     @Autowired
     private DockerComposeFacade dockerComposeFacade;
 
@@ -40,6 +43,8 @@ public class DockerComposeFacadeTest {
         verifyNoMoreInteractions(dockerComposeReader);
         verify(dockerComposeWriter, times(1)).write(any(), any());
         verifyNoMoreInteractions(dockerComposeWriter);
+        verify(dockerComposeValidator, times(1)).validate(any());
+        verifyNoMoreInteractions(dockerComposeValidator);
         // Verify Interaction with mock: they don't call the real method
         verify(dockerComposeServiceMock, times(1)).startComposeFile(any());
         verifyNoMoreInteractions(dockerComposeServiceMock);
