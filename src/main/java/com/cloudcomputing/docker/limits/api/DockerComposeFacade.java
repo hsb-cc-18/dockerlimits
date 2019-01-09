@@ -3,7 +3,7 @@ package com.cloudcomputing.docker.limits.api;
 import com.cloudcomputing.docker.limits.io.DockerComposeReader;
 import com.cloudcomputing.docker.limits.io.DockerComposeWriter;
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
-import com.cloudcomputing.docker.limits.model.io.DockerComposeValidator;
+import com.cloudcomputing.docker.limits.model.validator.DockerComposeValidator;
 import com.cloudcomputing.docker.limits.services.compose.DockerComposeService;
 import com.github.rozidan.springboot.logger.Loggable;
 import org.apache.commons.io.FileUtils;

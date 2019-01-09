@@ -1,5 +1,7 @@
-package com.cloudcomputing.docker.limits.model.io;
+package com.cloudcomputing.docker.limits.model.validator;
 
+import com.cloudcomputing.docker.limits.model.io.DockerCompose;
+import com.cloudcomputing.docker.limits.model.io.ServiceSpec;
 import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
