@@ -23,6 +23,15 @@ public class DockerCompose {
     @JsonProperty("services")
     public ImmutableMap<String, ServiceSpec> services;
 
+    public DockerCompose() {
+    }
+    
+    public DockerCompose(String hsbUsername, String version, @Nullable ImmutableMap<String, ServiceSpec> services) {
+        this.hsbUsername = hsbUsername;
+        this.version = version;
+        this.services = services;
+    }
+
     @JsonIgnore
     public String getHsbUsername() {
         return hsbUsername;
