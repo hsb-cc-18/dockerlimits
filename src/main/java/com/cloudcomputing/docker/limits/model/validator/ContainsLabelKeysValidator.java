@@ -4,14 +4,15 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Collection;
 
-public class ContainsLabelKeysValidator implements ConstraintValidator<ContainsKeys, Collection<String>> {
-
+public class ContainsLabelKeysValidator implements ConstraintValidator<ContainsLabelKeys, Collection<String>> {
     private static final String LABEL_KV_SEPARATOR = "=";
     String[] requiredKeys;
+    String messageTemplate;
 
     @Override
-    public void initialize(ContainsKeys constraintAnnotation) {
+    public void initialize(ContainsLabelKeys constraintAnnotation) {
         requiredKeys = constraintAnnotation.value();
+        messageTemplate = constraintAnnotation.message();
     }
 
     /**
@@ -42,11 +43,7 @@ public class ContainsLabelKeysValidator implements ConstraintValidator<ContainsK
 
         if ( !isValid ) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(
-                    "{com.cloudcomputing.docker.limits.model.io." +
-                            "constraintvalidatorcontext.ContainsLabelKeysValidator.message}"
-            )
-                             .addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(messageTemplate).addConstraintViolation();
         }
 
         return isValid;

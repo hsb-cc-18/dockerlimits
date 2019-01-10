@@ -13,8 +13,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = { ContainsLabelKeysValidator.class })
-public @interface ContainsKeys {
-    String message() default "{com.acme.ContainsKey.message}";
+public @interface ContainsLabelKeys {
+    String message() default "{com.cloudcomputing.docker.limits.model.validator.ContainsLabelKeys.message}";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
     String[] value() default {};
