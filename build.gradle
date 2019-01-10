@@ -71,6 +71,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
     implementation 'com.github.palantir.docker-compose-rule:docker-compose-rule-junit4:0.34.0'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     testCompile "org.assertj:assertj-core:3.11.1"
     // Junit docker rule, following 3 dependencies. https://github.com/tdomzal/junit-docker-rule/issues/42:
     testCompile 'com.github.tdomzal:junit-docker-rule:0.4.1'
@@ -79,6 +80,7 @@ dependencies {
 
     testCompile group: 'com.shazam', name: 'shazamcrest', version: '0.11'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    
 }
 
 task integrationTest(type: Test) {
