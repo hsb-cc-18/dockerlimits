@@ -17,16 +17,9 @@ class SingleStatCallback extends StatsCallback {
 
         final boolean await = countDownLatch.await(timeout, TimeUnit.SECONDS);
         if(!await) {
-            timeout(timeout);
-        }
-        if(!gotStats()) {
             return noResult();
         }
         return latestStat();
-    }
-
-    private void timeout(int timeout) {
-        throw new IllegalStateException("Did not get stats within " + timeout + "s");
     }
 
     private Optional<Statistics> noResult() {
