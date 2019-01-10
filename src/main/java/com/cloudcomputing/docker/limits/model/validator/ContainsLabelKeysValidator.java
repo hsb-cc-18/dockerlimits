@@ -29,7 +29,7 @@ public class ContainsLabelKeysValidator implements ConstraintValidator<ContainsL
     @Override
     public boolean isValid(Collection<String> value, ConstraintValidatorContext context) {
         if( value == null ) {
-            return true;
+            return false;
         }
 
         boolean isValid = false;
