@@ -66,6 +66,12 @@ public class DockerComposeValidatorTest {
         when(dockerCompose.getServices()).thenReturn(services);
         violations = dockerComposeValidator.validate(dockerCompose);
         ConstraintViolationSetAssert.assertThat(violations).hasViolationOnPath("services[nginx].labels");
+
+        // Test null label
+        services.get("nginx").labels = null;
+        when(dockerCompose.getServices()).thenReturn(services);
+        violations = dockerComposeValidator.validate(dockerCompose);
+        ConstraintViolationSetAssert.assertThat(violations).hasViolationOnPath("services[nginx].labels");
     }
 
 }
