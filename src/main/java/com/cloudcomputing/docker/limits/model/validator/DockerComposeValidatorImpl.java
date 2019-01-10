@@ -3,6 +3,7 @@ package com.cloudcomputing.docker.limits.model.validator;
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
 import com.cloudcomputing.docker.limits.model.io.ServiceSpec;
 import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
+import com.github.rozidan.springboot.logger.Loggable;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
@@ -18,11 +19,16 @@ import java.util.Set;
 import static java.lang.annotation.ElementType.FIELD;
 
 @Component
+@Loggable
 public class DockerComposeValidatorImpl implements DockerComposeValidator {
 
-    @Override
-    public Set<ConstraintViolation<DockerCompose>> validate(DockerCompose dockerCompose) {
+    private Validator validator;
 
+    public DockerComposeValidatorImpl() {
+        init();
+    }
+
+    private void init() {
         HibernateValidatorConfiguration configuration = Validation
                 .byProvider( HibernateValidator.class )
                 .configure();
@@ -45,17 +51,20 @@ public class DockerComposeValidatorImpl implements DockerComposeValidator {
                         .ignoreAllAnnotations()
                         .property( "labels", FIELD )
                         .valid()
-                            .constraint( new GenericConstraintDef<>(ContainsKeys.class)
+                            .constraint( new GenericConstraintDef<>(ContainsLabelKeys.class)
                                     .param( "value", new String[]{ DockerLabelService.LABEL_USER_KEY } ) )
         ;
 
-        Validator validator = configuration.addMapping( constraintMapping )
+        validator = configuration.addMapping( constraintMapping )
                                            .buildValidatorFactory()
                                            .getValidator();
 
-        Set<ConstraintViolation<DockerCompose>> errors = validator.validate(dockerCompose);
+    }
 
-        return errors;
+    @Override
+    public Set<ConstraintViolation<DockerCompose>> validate(DockerCompose dockerCompose) {
+        Set<ConstraintViolation<DockerCompose>> violations = validator.validate(dockerCompose);
+        return violations;
     }
 
 }
