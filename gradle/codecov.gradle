@@ -6,8 +6,16 @@ apply plugin: 'java'
 apply plugin: 'jacoco'
 jacocoTestReport {
     reports {
-        xml.enabled true
+        xml.enabled false
+        csv.enabled false
         html.enabled true
+    }
+    sourceSets sourceSets.main
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it)
+        })
     }
 }
 
