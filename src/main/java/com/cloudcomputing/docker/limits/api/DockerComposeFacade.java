@@ -3,6 +3,7 @@ package com.cloudcomputing.docker.limits.api;
 import com.cloudcomputing.docker.limits.io.DockerComposeReader;
 import com.cloudcomputing.docker.limits.io.DockerComposeWriter;
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
+import com.cloudcomputing.docker.limits.model.validator.DockerComposeValidator;
 import com.cloudcomputing.docker.limits.services.compose.DockerComposeService;
 import com.github.rozidan.springboot.logger.Loggable;
 import org.apache.commons.io.FileUtils;
@@ -23,33 +24,28 @@ public class DockerComposeFacade {
     private final DockerComposeReader dockerComposeReader;
     private final DockerComposeWriter dockerComposeWriter;
     private final DockerComposeService dockerComposeService;
+    private final DockerComposeValidator dockerComposeValidator;
 
     @Autowired
-    public DockerComposeFacade(DockerComposeReader dockerComposeReader, DockerComposeWriter dockerComposeWriter, DockerComposeService dockerComposeService) {
+    public DockerComposeFacade(DockerComposeReader dockerComposeReader, DockerComposeWriter dockerComposeWriter, DockerComposeService dockerComposeService, DockerComposeValidator dockerComposeValidator) {
         this.dockerComposeReader = dockerComposeReader;
         this.dockerComposeWriter = dockerComposeWriter;
         this.dockerComposeService = dockerComposeService;
+        this.dockerComposeValidator = dockerComposeValidator;
     }
 
     public void startDockerComposeFile(File dockerComposeFile) {
         try {
-            final DockerCompose dockerCompose = readDockerCompose(dockerComposeFile);
+            final InputStream dockerComposeYML = FileUtils.openInputStream(dockerComposeFile);
+            final DockerCompose dockerCompose = dockerComposeReader.read(dockerComposeYML);
             final File usersLatestDockerCompose = new File(FileUtils.getTempDirectory(), dockerCompose.getHsbUsername());
             //TODO: validate labels
-            writeAndStartUsersDockerCompose(dockerCompose, usersLatestDockerCompose);
+            dockerComposeValidator.validate(dockerCompose);
+            dockerComposeWriter.write(usersLatestDockerCompose, dockerCompose);
+            dockerComposeService.startComposeFile(usersLatestDockerCompose);
         } catch (IOException e) {
             logger.error("IO Failure", e);
         }
-    }
-
-    private void writeAndStartUsersDockerCompose(DockerCompose dockerCompose, File usersLatestDockerCompose) throws IOException {
-        dockerComposeWriter.write(usersLatestDockerCompose, dockerCompose);
-        dockerComposeService.startComposeFile(usersLatestDockerCompose);
-    }
-
-    private DockerCompose readDockerCompose(File dockerComposeFile) throws IOException {
-        final InputStream dockerComposeYML = FileUtils.openInputStream(dockerComposeFile);
-        return dockerComposeReader.read(dockerComposeYML);
     }
 
 
