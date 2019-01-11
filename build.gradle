@@ -73,7 +73,10 @@ dependencies {
     testCompile 'org.hibernate.validator:hibernate-validator-test-utils:6.0.13.Final'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
     implementation 'com.github.palantir.docker-compose-rule:docker-compose-rule-junit4:0.34.0'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation ('de.xn--ho-hia.storage_units:storage-units:4.0.0-20160812154711') {
+        exclude group: 'de.xn--ho-hia.quality', module: 'null-analysis'
+    }
+    implementation 'com.github.sebhoss:null-analysis:null-analysis-3.0.2-20170108184519'
     testCompile "org.assertj:assertj-core:3.11.1"
     // Junit docker rule, following 3 dependencies. https://github.com/tdomzal/junit-docker-rule/issues/42:
     testCompile 'com.github.tdomzal:junit-docker-rule:0.4.1'
