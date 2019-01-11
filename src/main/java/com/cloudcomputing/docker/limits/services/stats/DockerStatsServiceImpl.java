@@ -26,8 +26,8 @@ class DockerStatsServiceImpl implements DockerStatsService {
     }
 
     @Override
-    public String getStats(@Nonnull String containerId) {
-        String hostConfig = "";
+    public Stats getStats(@Nonnull String containerId) {
+        Stats stats = null;
         try {
             final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
@@ -35,13 +35,16 @@ class DockerStatsServiceImpl implements DockerStatsService {
             logger.debug("Memory limit (stats): {}", latestStats.getMemoryStats().getLimit());
 
             final InspectContainerResponse exec1 = dockerClient.inspectContainerCmd(containerId).exec();
-            logger.debug("Memory limit (inspect): {}", exec1.getHostConfig().getMemory());
+            final String memory = String.valueOf(exec1.getHostConfig().getMemory());
+            final Integer cpuPercent = Math.toIntExact(exec1.getHostConfig().getCpuPercent());
+            logger.debug("Memory limit (inspect): {}", memory);
 
-            hostConfig = exec1.getHostConfig().toString();
-        } catch (Exception e) {
+            return new Stats(memory, cpuPercent);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             logger.error("Failed to read stats", e);
         }
 
-        return hostConfig;
+        return null;
     }
 }
