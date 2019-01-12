@@ -26,22 +26,35 @@ class DockerStatsServiceImpl implements DockerStatsService {
     }
 
     @Override
-    public String getStats(@Nonnull String containerId) {
-        String hostConfig = "";
+    public Stats getStats(@Nonnull String containerId) {
+        Stats stats = null;
         try {
             final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
             final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No Stats received"));
-            logger.debug("Memory limit (stats): {}", latestStats.getMemoryStats().getLimit());
+            final String memory = String.valueOf(latestStats.getMemoryStats().getLimit());
 
-            final InspectContainerResponse exec1 = dockerClient.inspectContainerCmd(containerId).exec();
-            logger.debug("Memory limit (inspect): {}", exec1.getHostConfig().getMemory());
+            final long cpuDelta = latestStats.getCpuStats().getCpuUsage().getTotalUsage() - latestStats.getPreCpuStats().getCpuUsage().getTotalUsage();
+            final long systemDelta = latestStats.getCpuStats().getSystemCpuUsage() - latestStats.getPreCpuStats().getSystemCpuUsage();
+            final Integer cpuPercent = Math.toIntExact(cpuDelta / systemDelta * 100);
+            logger.debug("Memory limit (stats): {}", memory);
 
-            hostConfig = exec1.getHostConfig().toString();
-        } catch (Exception e) {
+            return new Stats(memory, cpuPercent);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             logger.error("Failed to read stats", e);
         }
 
-        return hostConfig;
+        return null;
+    }
+
+    @Override
+    public Stats getConfig(@Nonnull String containerId) {
+        final InspectContainerResponse exec1 = dockerClient.inspectContainerCmd(containerId).exec();
+        final String memory = String.valueOf(exec1.getHostConfig().getMemory());
+        final Integer cpuPercent = Math.toIntExact(exec1.getHostConfig().getCpuPercent());
+        logger.debug("Memory limit (inspect): {}", memory);
+
+        return new Stats(memory, cpuPercent);
     }
 }

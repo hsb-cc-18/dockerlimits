@@ -10,9 +10,16 @@ import java.util.concurrent.TimeUnit;
 class SingleStatCallback extends StatsCallback {
 
     public SingleStatCallback() {
-        super(new CountDownLatch(1));
+        // Get at least two values, so "pre" attributes in data-structure are populated
+        super(new CountDownLatch(2));
     }
 
+    /**
+     * Get latest stats.
+     * @param timeout in seconds
+     * @return
+     * @throws InterruptedException
+     */
     public Optional<Statistics> getLatestStatsWithTimeout(int timeout) throws InterruptedException {
 
         final boolean await = countDownLatch.await(timeout, TimeUnit.SECONDS);

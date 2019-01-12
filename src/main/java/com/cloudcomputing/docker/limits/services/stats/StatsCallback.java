@@ -3,12 +3,15 @@ package com.cloudcomputing.docker.limits.services.stats;
 import com.github.dockerjava.api.model.Statistics;
 import com.github.dockerjava.core.async.ResultCallbackTemplate;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 class StatsCallback extends ResultCallbackTemplate<StatsCallback, Statistics> {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private final List<Statistics> statistics = Lists.newArrayList();
     protected final CountDownLatch countDownLatch;
 
@@ -20,7 +23,9 @@ class StatsCallback extends ResultCallbackTemplate<StatsCallback, Statistics> {
 
     @Override
     public void onNext(Statistics stats) {
-        System.out.println("Received stats #" + countDownLatch.getCount() +" : " + stats);
+
+        logger.debug("Received stats #{} : {}", countDownLatch.getCount(), stats);
+
         if (stats != null) {
             gotStats = true;
             statistics.add(stats);
