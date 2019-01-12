@@ -1,0 +1,11 @@
+x-hsb-username: 'czoeller'
+version: '2.2'
+services:
+  web:
+    image: "nginx:latest"
+    container_name: "nginx"
+    ports:
+      - "8080:8080"
+    labels:
+      - "hsb.username=czoeller"
+    mem_limit: 50M
