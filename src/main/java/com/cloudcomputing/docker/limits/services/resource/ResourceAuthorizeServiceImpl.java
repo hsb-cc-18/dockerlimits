@@ -30,20 +30,20 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
 
     @Override
     public boolean isAuthorized(DockerCompose dockerCompose) {
-        boolean authorized = false;
+        boolean isAuthorized = false;
 
         final Stats usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
         final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
         final Stats wouldAllocReources = usedResources.add(requestedResources);
 
         if(mem_limitFits(wouldAllocReources) && cpu_percentFits(wouldAllocReources)) {
-            authorized = true;
+            isAuthorized = true;
         } else {
-            authorized = false;
+            isAuthorized = false;
             logger.debug("Request exceeds limit");
         }
 
-        return authorized;
+        return isAuthorized;
     }
 
     private boolean cpu_percentFits(Stats wouldAllocReources) {
