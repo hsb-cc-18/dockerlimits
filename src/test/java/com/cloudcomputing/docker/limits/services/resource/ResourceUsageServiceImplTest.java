@@ -32,7 +32,7 @@ public class ResourceUsageServiceImplTest {
     ResourceUsageService resourceUsageService;
 
     @Test
-    public void testReturnsTrueIfEnoughResources() {
+    public void testSummarizesResources() {
         List<String> containerIds = Lists.newArrayList("28281c", "asdas2");
         when(dockerLabelService.getContainers("czoeller")).thenReturn(containerIds);
         when(dockerStatsService.getStats(any())).thenReturn(new Stats("2M", 30))
