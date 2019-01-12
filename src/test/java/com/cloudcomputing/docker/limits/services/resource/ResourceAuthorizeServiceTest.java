@@ -31,7 +31,7 @@ public class ResourceAuthorizeServiceTest {
     private DockerCompose dockerCompose;
 
     @Test
-    public void returnsTrueIfEnoughResources() {
+    public void returnsTrueIfEnoughMemory() {
 
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("200M", 10));
@@ -41,7 +41,17 @@ public class ResourceAuthorizeServiceTest {
     }
 
     @Test
-    public void returnsFalseIfNotEnoughResources() {
+    public void returnsFalseIfNotEnoughMemory() {
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 10));
+
+        final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
+
+        assertThat(check).isFalse();
+    }
+
+    @Test
+    public void returnsFalseIfNotEnoughCpu() {
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 100));
 

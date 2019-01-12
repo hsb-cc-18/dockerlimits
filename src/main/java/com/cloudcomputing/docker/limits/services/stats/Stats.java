@@ -1,7 +1,7 @@
 package com.cloudcomputing.docker.limits.services.stats;
 
 
-import de.xn__ho_hia.storage_unit.Mebibyte;
+import de.xn__ho_hia.storage_unit.Megabyte;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import javax.annotation.Nonnull;
@@ -16,12 +16,12 @@ public class Stats {
     public Integer cpu_percent;
     //public Integer cpu_count, cpu_shares,  cpu_quota;
 
-    public Mebibyte mem_limit;
+    public Megabyte mem_limit;
 
     //public String cpu_period, cpuset, memswap_limit, mem_swappiness, mem_reservation, shm_size;
 
     public Stats(String mem_limit, Integer cpu_percent) {
-        this.mem_limit = Mebibyte.valueOf(toBytes(mem_limit));
+        this.mem_limit = Megabyte.valueOf(toBytes(mem_limit));
         this.cpu_percent = cpu_percent;
     }
 
@@ -49,10 +49,11 @@ public class Stats {
 
         BigDecimal bytes;
         if (matcher.find()) {
+            //TODO: also process digits after ,
             String number = matcher.group(1);
             int pow = powerMap.get(matcher.group(2).toUpperCase());
             bytes = new BigDecimal(number);
-            bytes = bytes.multiply(BigDecimal.valueOf(1024).pow(pow));
+            bytes = bytes.multiply(BigDecimal.valueOf(1000).pow(pow));
         } else {
             bytes = new BigDecimal(filesize);
         }
