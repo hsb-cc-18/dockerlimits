@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class DockerComposeRequestedResourcesServiceImpl implements DockerComposeRequestedResourcesService {
+public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeResourceAnalyzerService {
     @Override
-    public Stats getRequestedResources(DockerCompose dockerCompose) {
+    public Stats sumResources(DockerCompose dockerCompose) {
 
 
         final Optional<Mebibyte> mem_limit_requestOpt = dockerCompose.getServices().entrySet()

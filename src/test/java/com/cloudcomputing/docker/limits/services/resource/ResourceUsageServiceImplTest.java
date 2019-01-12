@@ -39,7 +39,7 @@ public class ResourceUsageServiceImplTest {
                                                 .thenReturn(new Stats("8M", 50))
                                                 .thenThrow(new IllegalStateException("No more data"));
 
-        final Stats stats = resourceUsageService.summarizeResourceUsage("czoeller");
+        final Stats stats = resourceUsageService.sumResourceUsage("czoeller");
         assertThat(stats.mem_limit).isEqualTo(mebibyte(10));
         assertThat(stats.cpu_percent).isEqualTo(80);
     }
