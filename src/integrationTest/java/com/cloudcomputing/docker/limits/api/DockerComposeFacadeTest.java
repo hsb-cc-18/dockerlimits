@@ -4,6 +4,7 @@ import com.cloudcomputing.docker.limits.io.DockerComposeReader;
 import com.cloudcomputing.docker.limits.io.DockerComposeWriter;
 import com.cloudcomputing.docker.limits.model.validator.DockerComposeValidator;
 import com.cloudcomputing.docker.limits.services.compose.DockerComposeService;
+import com.cloudcomputing.docker.limits.services.resource.ResourceAuthorizeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,16 @@ public class DockerComposeFacadeTest {
     private DockerComposeService dockerComposeServiceMock;
     @MockBean
     private DockerComposeValidator dockerComposeValidator;
+    @MockBean
+    private ResourceAuthorizeService resourceAuthorizeService;
     @Autowired
     private DockerComposeFacade dockerComposeFacade;
 
     @Test
     public void startDockerComposeFile() throws IOException {
         final File dockerComposeFile = new File(getClass().getResource("../io/docker-compose-with-username.yml").getFile());
+
+        when(resourceAuthorizeService.isAuthorized(any())).thenReturn(true);
 
         dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
 
@@ -45,6 +50,8 @@ public class DockerComposeFacadeTest {
         verifyNoMoreInteractions(dockerComposeWriter);
         verify(dockerComposeValidator, times(1)).validate(any());
         verifyNoMoreInteractions(dockerComposeValidator);
+        verify(resourceAuthorizeService, times(1)).isAuthorized(any());
+        verifyNoMoreInteractions(resourceAuthorizeService);
         // Verify Interaction with mock: they don't call the real method
         verify(dockerComposeServiceMock, times(1)).startComposeFile(any());
         verifyNoMoreInteractions(dockerComposeServiceMock);
