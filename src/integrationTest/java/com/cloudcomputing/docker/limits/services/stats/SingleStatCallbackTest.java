@@ -34,7 +34,7 @@ public class SingleStatCallbackTest extends ContainerIT {
 
     @Test
     public void getLatestStatsWithTimeout() throws InterruptedException, IOException {
-        final Optional<Statistics> latestStatsWithTimeout = singleStatCallback.getLatestStatsWithTimeout(10);
+        final Optional<Statistics> latestStatsWithTimeout = singleStatCallback.getLatestStatsWithTimeout(3);
         Boolean gotStats = singleStatCallback.gotStats();
 
         assertThat(gotStats).isTrue();
