@@ -48,7 +48,7 @@ public class DockerComposeFacadeTest {
         verifyNoMoreInteractions(dockerComposeReader);
         verify(dockerComposeWriter, times(1)).write(any(), any());
         verifyNoMoreInteractions(dockerComposeWriter);
-        verify(dockerComposeValidator, times(1)).validate(any());
+        verify(dockerComposeValidator, times(2)).validate(any());
         verifyNoMoreInteractions(dockerComposeValidator);
         verify(resourceAuthorizeService, times(1)).isAuthorized(any());
         verifyNoMoreInteractions(resourceAuthorizeService);
