@@ -13,6 +13,7 @@
 
     <logger name="com.cloudcomputing.docker" level="TRACE"/>
     <logger name="com.github.dockerjava" level="ERROR"/>
+    <logger name="com.palantir.docker.compose.execution" level="ERROR"/>
     <!--<logger name="com.github.dockerjava.jaxrs" level="DEBUG"/>
     <logger name="com.github.dockerjava.netty" level="DEBUG"/>
     <logger name="org.apache.http.impl.conn" level="DEBUG"/>-->
