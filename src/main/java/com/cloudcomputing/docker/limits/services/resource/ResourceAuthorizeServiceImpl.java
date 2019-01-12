@@ -3,7 +3,7 @@ package com.cloudcomputing.docker.limits.services.resource;
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
 import com.cloudcomputing.docker.limits.services.stats.Stats;
 import com.github.rozidan.springboot.logger.Loggable;
-import de.xn__ho_hia.storage_unit.Mebibyte;
+import de.xn__ho_hia.storage_unit.Megabyte;
 import de.xn__ho_hia.storage_unit.StorageUnits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,8 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
     private final ResourceUsageService resourceUsageService;
     private final DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
     //TODO: dynamic depending on user role
-    private final Mebibyte mem_limit_role = StorageUnits.mebibyte(2048);
+    private final Megabyte mem_limit_role = StorageUnits.megabyte(2048);
+    private final int cpu_percent_role = 100;
 
     @Autowired
     public ResourceAuthorizeServiceImpl(ResourceUsageService resourceUsageService, DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService) {
@@ -33,8 +34,9 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
 
         final Stats usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
         final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
+        final Stats wouldAllocReources = usedResources.add(requestedResources);
 
-        if(mem_limitFits(usedResources, requestedResources) && cpu_percentFits()) {
+        if(mem_limitFits(wouldAllocReources) && cpu_percentFits(wouldAllocReources)) {
             authorized = true;
         } else {
             authorized = false;
@@ -44,13 +46,12 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
         return authorized;
     }
 
-    private boolean cpu_percentFits() {
-        //TODO: implement
-        return true;
+    private boolean cpu_percentFits(Stats wouldAllocReources) {
+        return cpu_percent_role - wouldAllocReources.cpu_percent > 0;
     }
 
-    private boolean mem_limitFits(Stats usedResources, Stats requestedResources) {
-        return mem_limit_role.subtract(requestedResources.mem_limit.add(usedResources.mem_limit)).longValue() > 0;
+    private boolean mem_limitFits(Stats wouldAllocReources) {
+        return mem_limit_role.subtract(wouldAllocReources.mem_limit).longValue() > 0;
     }
 
 }

@@ -13,9 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static de.xn__ho_hia.storage_unit.StorageUnits.mebibyte;
+import static de.xn__ho_hia.storage_unit.StorageUnits.megabyte;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -40,7 +40,7 @@ public class ResourceUsageServiceImplTest {
                                                 .thenThrow(new IllegalStateException("No more data"));
 
         final Stats stats = resourceUsageService.sumResourceUsage("czoeller");
-        assertThat(stats.mem_limit).isEqualTo(mebibyte(10));
+        assertThat(stats.mem_limit).isEqualTo(megabyte(10));
         assertThat(stats.cpu_percent).isEqualTo(80);
     }
 
