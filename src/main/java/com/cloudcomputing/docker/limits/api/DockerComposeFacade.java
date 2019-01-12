@@ -47,8 +47,14 @@ public class DockerComposeFacade {
             final InputStream dockerComposeYML = FileUtils.openInputStream(dockerComposeFile);
             final DockerCompose dockerCompose = dockerComposeReader.read(dockerComposeYML);
             final File usersLatestDockerComposeFile = new File(FileUtils.getTempDirectory(), dockerCompose.getHsbUsername());
-            final Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
+            Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
             final DockerCompose fixedDockerCompose = dockerComposeFixer.fix(violations, dockerCompose);
+            violations = dockerComposeValidator.validate(dockerCompose);
+
+            if(!violations.isEmpty()) {
+                logger.debug("There are {} errors in your docker-compose we were not able to fix automatically. {}", violations.size(), violations);
+                return;
+            }
 
             if( resourceAuthorizeService.isAuthorized(dockerCompose) ) {
                 dockerComposeWriter.write(usersLatestDockerComposeFile, fixedDockerCompose);
