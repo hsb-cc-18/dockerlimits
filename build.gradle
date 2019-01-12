@@ -38,6 +38,14 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+idea{
+    module{
+        inheritOutputDirs = false
+        outputDir = compileJava.destinationDir
+        testOutputDir = compileTestJava.destinationDir
+    }
+}
+
 sourceSets {
     integrationTest {
         java {
@@ -96,3 +104,9 @@ task integrationTest(type: Test) {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
+
+task copyTask(type: Copy) {
+    from "$projectDir/src/test/resources"
+    into "$buildDir/classes/java/main"
+}
+copyTask.dependsOn build
