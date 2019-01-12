@@ -34,7 +34,7 @@ public class Application implements CommandLineRunner {
 
     public Application(@Nonnull DockerComposeFacade dockerComposeFacade) {
         this.dockerComposeFacade = dockerComposeFacade;
-        dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
+
     }
 
     public static void main(String[] args) {
@@ -49,5 +49,8 @@ public class Application implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
+        if (args.length > 0 && args[0].equals("run")) {
+            dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
+        }
     }
 }
