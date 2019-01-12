@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,8 +34,8 @@ public class ResourceAuthorizeServiceTest {
     @Test
     public void returnsTrueIfEnoughMemory() {
 
-        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("200M", 10));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(completedFuture(new Stats("1G", 50)));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(completedFuture(new Stats("200M", 10)));
 
         final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
         assertThat(check).isTrue();
@@ -42,8 +43,8 @@ public class ResourceAuthorizeServiceTest {
 
     @Test
     public void returnsFalseIfNotEnoughMemory() {
-        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 10));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(completedFuture(new Stats("1G", 50)));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(completedFuture(new Stats("2G", 10)));
 
         final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
 
@@ -52,8 +53,8 @@ public class ResourceAuthorizeServiceTest {
 
     @Test
     public void returnsFalseIfNotEnoughCpu() {
-        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 100));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(completedFuture(new Stats("1G", 50)));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(completedFuture(new Stats("2G", 100)));
 
         final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
 
