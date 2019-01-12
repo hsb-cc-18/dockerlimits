@@ -25,6 +25,7 @@ public class SingleStatCallbackTest extends ContainerIT {
     private SingleStatCallback singleStatCallback;
 
     @Before
+    @Override
     public void setUp() {
         super.setUp();
         singleStatCallback = new SingleStatCallback();

@@ -34,8 +34,8 @@ public class DockerComposeFixerImpl implements DockerComposeFixer {
                     if(node.getName().contains("service")) {
                         serviceSpec = (ServiceSpec) ((NodeImpl) node).getValue();
                         serviceName = propertyPath.toString()
-                                                  .substring(propertyPath.toString().indexOf("[")+1, propertyPath.toString()
-                                                                                                             .indexOf("]"));
+                                                  .substring(propertyPath.toString().indexOf('[')+1, propertyPath.toString()
+                                                                                                             .indexOf(']'));
                     }
                     if(node.getName().equals("labels")) {
                         if (serviceSpec == null) {

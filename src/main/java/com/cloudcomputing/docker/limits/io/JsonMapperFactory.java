@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JsonMapperFactory {
 
+    private JsonMapperFactory() {}
+
     @Bean
     public static ObjectMapper getObjectMapper() {
         final YAMLFactory yamlFactory = new YAMLFactory()
