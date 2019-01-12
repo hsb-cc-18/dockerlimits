@@ -21,15 +21,15 @@ public class ResourceUsageServiceImpl implements ResourceUsageService {
     }
 
     @Override
-    public Stats summarizeResourceUsage(String username) {
+    public Stats sumResourceUsage(String username) {
         final List<String> containers = dockerLabelService.getContainers(username);
 
-        Stats comStat = new Stats("0M", 0);
+        Stats sumStat = new Stats("0M", 0);
         for (String container : containers) {
             final Stats stats = dockerStatsService.getStats(container);
-            comStat = comStat.add(stats);
+            sumStat = sumStat.add(stats);
         }
 
-        return comStat;
+        return sumStat;
     }
 }

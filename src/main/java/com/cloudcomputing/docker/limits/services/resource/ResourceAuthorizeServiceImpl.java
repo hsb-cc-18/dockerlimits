@@ -12,36 +12,36 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Loggable
-public class ResourceCheckerServiceImpl implements ResourceCheckerService {
+public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final ResourceUsageService resourceUsageService;
-    private final DockerComposeRequestedResourcesService dockerComposeRequestedResourcesService;
+    private final DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
     //TODO: dynamic depending on user role
     private final Mebibyte mem_limit_role = StorageUnits.mebibyte(2048);
 
     @Autowired
-    public ResourceCheckerServiceImpl(ResourceUsageService resourceUsageService, DockerComposeRequestedResourcesService dockerComposeRequestedResourcesService) {
+    public ResourceAuthorizeServiceImpl(ResourceUsageService resourceUsageService, DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService) {
         this.resourceUsageService = resourceUsageService;
-        this.dockerComposeRequestedResourcesService = dockerComposeRequestedResourcesService;
+        this.dockerComposeResourceAnalyzerService = dockerComposeResourceAnalyzerService;
     }
 
     @Override
-    public boolean check(DockerCompose dockerCompose) {
-        boolean fits = false;
+    public boolean isAuthorized(DockerCompose dockerCompose) {
+        boolean authorized = false;
 
-        final Stats usedResources = resourceUsageService.summarizeResourceUsage(dockerCompose.getHsbUsername());
-        final Stats requestedResources = dockerComposeRequestedResourcesService.getRequestedResources(dockerCompose);
+        final Stats usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
+        final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
 
         if(mem_limitFits(usedResources, requestedResources) && cpu_percentFits()) {
-            fits = true;
+            authorized = true;
         } else {
-            fits = false;
+            authorized = false;
             logger.debug("Request exceeds limit");
         }
 
-        return fits;
+        return authorized;
     }
 
     private boolean cpu_percentFits() {

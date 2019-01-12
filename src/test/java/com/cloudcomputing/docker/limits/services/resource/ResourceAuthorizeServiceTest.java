@@ -16,16 +16,16 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class ResourceCheckerServiceTest {
+public class ResourceAuthorizeServiceTest {
 
     @Autowired
-    ResourceCheckerService resourceCheckerService;
+    ResourceAuthorizeService resourceAuthorizeService;
 
     @MockBean
     ResourceUsageService resourceUsageService;
 
     @MockBean
-    DockerComposeRequestedResourcesService dockerComposeRequestedResourcesService;
+    DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
 
     @Mock
     private DockerCompose dockerCompose;
@@ -33,19 +33,19 @@ public class ResourceCheckerServiceTest {
     @Test
     public void returnsTrueIfEnoughResources() {
 
-        when(resourceUsageService.summarizeResourceUsage(any())).thenReturn(new Stats("1G", 50));
-        when(dockerComposeRequestedResourcesService.getRequestedResources(any())).thenReturn(new Stats("200M", 10));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("200M", 10));
 
-        final boolean check = resourceCheckerService.check(dockerCompose);
+        final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
         assertThat(check).isTrue();
     }
 
     @Test
     public void returnsFalseIfNotEnoughResources() {
-        when(resourceUsageService.summarizeResourceUsage(any())).thenReturn(new Stats("1G", 50));
-        when(dockerComposeRequestedResourcesService.getRequestedResources(any())).thenReturn(new Stats("2G", 100));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 100));
 
-        final boolean check = resourceCheckerService.check(dockerCompose);
+        final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
 
         assertThat(check).isFalse();
     }
