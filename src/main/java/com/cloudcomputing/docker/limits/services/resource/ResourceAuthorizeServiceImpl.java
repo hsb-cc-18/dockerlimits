@@ -19,8 +19,8 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
     private final ResourceUsageService resourceUsageService;
     private final DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
     //TODO: dynamic depending on user role
-    private final Megabyte mem_limit_role = StorageUnits.megabyte(2048);
-    private final int cpu_percent_role = 100;
+    private final static Megabyte mem_limit_role = StorageUnits.megabyte(2048);
+    private final static int cpu_percent_role = 100;
 
     @Autowired
     public ResourceAuthorizeServiceImpl(ResourceUsageService resourceUsageService, DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService) {

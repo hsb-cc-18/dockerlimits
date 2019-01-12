@@ -7,7 +7,7 @@ apply plugin: 'jacoco'
 jacocoTestReport {
     reports {
         xml.enabled true
-        csv.enabled true
+        csv.enabled false
         html.enabled true
     }
     sourceSets sourceSets.main

@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.cloudcomputing.docker.limits.services.resource.DockerComposeResourceAnalyzerServiceImpl.COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE;
 import static de.xn__ho_hia.storage_unit.StorageUnits.gigabyte;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -42,5 +44,17 @@ public class DockerComposeResourceAnalyzerServiceTest {
 
         assertThat(stats.mem_limit).isEqualTo(gigabyte(16));
         assertThat(stats.cpu_percent).isEqualTo(80);
+    }
+
+    @Test
+    public void testException() {
+        final ServiceSpec nginx = new ServiceSpec();
+        // Set null explicitly
+        nginx.mem_limit = null;
+
+        final ImmutableMap<String, ServiceSpec> services = ImmutableMap.<String, ServiceSpec>builder().put("nginx", nginx).build();
+        when(dockerCompose.getServices()).thenReturn(services);
+
+        assertThatCode(() -> dockerComposeResourceAnalyzerService.sumResources(dockerCompose)).hasMessage(COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE);
     }
 }

@@ -9,6 +9,9 @@ import java.util.Optional;
 
 @Service
 public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeResourceAnalyzerService {
+
+    public static final String COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE = "Could not sum mem of docker compose.";
+
     @Override
     public Stats sumResources(DockerCompose dockerCompose) {
 
@@ -30,7 +33,7 @@ public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeRe
                                      .sum();
 
         if(!mem_limit_requestOpt.isPresent()) {
-            throw new IllegalStateException("Could not sum mem of docker compose.");
+            throw new IllegalStateException(COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE);
         }
 
         return new Stats(mem_limit_requestOpt.get().toString(), cpu_requested);
