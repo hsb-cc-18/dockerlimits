@@ -3,6 +3,7 @@ package com.cloudcomputing.docker.limits.services.stats;
 import com.github.dockerjava.api.model.Statistics;
 import com.google.common.collect.Iterables;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -20,12 +21,15 @@ class SingleStatCallback extends StatsCallback {
      * @return
      * @throws InterruptedException
      */
-    public Optional<Statistics> getLatestStatsWithTimeout(int timeout) throws InterruptedException {
+    public Optional<Statistics> getLatestStatsWithTimeout(int timeout) throws InterruptedException, IOException {
 
         final boolean await = countDownLatch.await(timeout, TimeUnit.SECONDS);
         if(!await) {
             return noResult();
         }
+
+        close();
+
         return latestStat();
     }
 
