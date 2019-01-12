@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Percentage.withPercentage;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,6 +36,12 @@ public class DockerStatsServiceTest extends ContainerIT {
     @Test
     public void getStats() {
         final Stats stats = dockerStatsService.getStats(getContainerId());
+        assertThat(stats.mem_limit.longValue()).isCloseTo(100000000L, withPercentage(1));
+    }
+
+    @Test
+    public void getConfig() {
+        final Stats stats = dockerStatsService.getConfig(getContainerId());
         assertThat(stats.mem_limit.longValue()).isEqualTo(100000000L);
     }
 

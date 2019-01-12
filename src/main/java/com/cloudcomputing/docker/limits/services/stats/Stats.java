@@ -2,6 +2,7 @@ package com.cloudcomputing.docker.limits.services.stats;
 
 
 import de.xn__ho_hia.storage_unit.Mebibyte;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -11,13 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Stats {
-    public Double cpus;
-    public Integer cpu_count, cpu_shares, cpu_percent,  cpu_quota;
+    //public Double cpus;
+    public Integer cpu_percent;
+    //public Integer cpu_count, cpu_shares,  cpu_quota;
 
     public Mebibyte mem_limit;
 
-    public String cpu_period, cpuset,
-            memswap_limit, mem_swappiness, mem_reservation, shm_size;
+    //public String cpu_period, cpuset, memswap_limit, mem_swappiness, mem_reservation, shm_size;
 
     public Stats(String mem_limit, Integer cpu_percent) {
         this.mem_limit = Mebibyte.valueOf(toBytes(mem_limit));
@@ -58,5 +59,10 @@ public class Stats {
 
         returnValue = bytes.longValue();
         return returnValue;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
     }
 }
