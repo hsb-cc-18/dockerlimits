@@ -8,7 +8,11 @@ import de.xn__ho_hia.storage_unit.StorageUnits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @Loggable
@@ -32,17 +36,25 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
     public boolean isAuthorized(DockerCompose dockerCompose) {
         boolean isAuthorized = false;
 
-        final Stats usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
-        final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
-        final Stats wouldAllocReources = usedResources.add(requestedResources);
+        final CompletableFuture<Stats> usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
+        final CompletableFuture<Stats> requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
 
-        if(mem_limitFits(wouldAllocReources) && cpu_percentFits(wouldAllocReources)) {
-            isAuthorized = true;
-        } else {
-            isAuthorized = false;
-            logger.debug("Request exceeds limit");
+        try {
+            CompletableFuture.allOf(usedResources, requestedResources).join();
+
+            final Stats wouldAllocResources = usedResources.get().add(requestedResources.get());
+
+            if(mem_limitFits(wouldAllocResources) && cpu_percentFits(wouldAllocResources)) {
+                isAuthorized = true;
+            } else {
+                isAuthorized = false;
+                logger.debug("Request exceeds limit");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-
         return isAuthorized;
     }
 

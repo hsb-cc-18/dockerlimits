@@ -2,6 +2,8 @@ package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.services.stats.Stats;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface ResourceUsageService {
-    Stats sumResourceUsage(String username);
+    CompletableFuture<Stats> sumResourceUsage(String username);
 }

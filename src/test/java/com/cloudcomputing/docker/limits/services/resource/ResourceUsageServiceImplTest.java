@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static de.xn__ho_hia.storage_unit.StorageUnits.megabyte;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,14 +33,14 @@ public class ResourceUsageServiceImplTest {
     ResourceUsageService resourceUsageService;
 
     @Test
-    public void testSummarizesResources() {
+    public void testSummarizesResources() throws ExecutionException, InterruptedException {
         List<String> containerIds = Lists.newArrayList("28281c", "asdas2");
         when(dockerLabelService.getContainers("czoeller")).thenReturn(containerIds);
         when(dockerStatsService.getStats(any())).thenReturn(new Stats("2M", 30))
                                                 .thenReturn(new Stats("8M", 50))
                                                 .thenThrow(new IllegalStateException("No more data"));
 
-        final Stats stats = resourceUsageService.sumResourceUsage("czoeller");
+        final Stats stats = resourceUsageService.sumResourceUsage("czoeller").get();
         assertThat(stats.mem_limit).isEqualTo(megabyte(10));
         assertThat(stats.cpu_percent).isEqualTo(80);
     }

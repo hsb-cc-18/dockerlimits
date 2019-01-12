@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.concurrent.ExecutionException;
+
 import static com.cloudcomputing.docker.limits.services.resource.DockerComposeResourceAnalyzerServiceImpl.COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE;
 import static de.xn__ho_hia.storage_unit.StorageUnits.gigabyte;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +30,7 @@ public class DockerComposeResourceAnalyzerServiceTest {
     DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
 
     @Test
-    public void sumResources() {
+    public void sumResources() throws ExecutionException, InterruptedException {
         final ServiceSpec nginx = new ServiceSpec();
         nginx.mem_limit = "10G";
         nginx.cpu_percent = 20;
@@ -40,7 +42,7 @@ public class DockerComposeResourceAnalyzerServiceTest {
                                                                                                       .build();
         when(dockerCompose.getServices()).thenReturn(services);
 
-        final Stats stats = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
+        final Stats stats = dockerComposeResourceAnalyzerService.sumResources(dockerCompose).get();
 
         assertThat(stats.mem_limit).isEqualTo(gigabyte(16));
         assertThat(stats.cpu_percent).isEqualTo(80);
