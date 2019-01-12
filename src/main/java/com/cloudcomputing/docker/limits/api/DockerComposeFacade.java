@@ -6,6 +6,7 @@ import com.cloudcomputing.docker.limits.model.fixer.DockerComposeFixer;
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
 import com.cloudcomputing.docker.limits.model.validator.DockerComposeValidator;
 import com.cloudcomputing.docker.limits.services.compose.DockerComposeService;
+import com.cloudcomputing.docker.limits.services.resource.ResourceAuthorizeService;
 import com.github.rozidan.springboot.logger.Loggable;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -29,14 +30,16 @@ public class DockerComposeFacade {
     private final DockerComposeService dockerComposeService;
     private final DockerComposeValidator dockerComposeValidator;
     private final DockerComposeFixer dockerComposeFixer;
+    private final ResourceAuthorizeService resourceAuthorizeService;
 
     @Autowired
-    public DockerComposeFacade(DockerComposeReader dockerComposeReader, DockerComposeWriter dockerComposeWriter, DockerComposeService dockerComposeService, DockerComposeValidator dockerComposeValidator, DockerComposeFixer dockerComposeFixer) {
+    public DockerComposeFacade(DockerComposeReader dockerComposeReader, DockerComposeWriter dockerComposeWriter, DockerComposeService dockerComposeService, DockerComposeValidator dockerComposeValidator, DockerComposeFixer dockerComposeFixer, ResourceAuthorizeService resourceAuthorizeService) {
         this.dockerComposeReader = dockerComposeReader;
         this.dockerComposeWriter = dockerComposeWriter;
         this.dockerComposeService = dockerComposeService;
         this.dockerComposeValidator = dockerComposeValidator;
         this.dockerComposeFixer = dockerComposeFixer;
+        this.resourceAuthorizeService = resourceAuthorizeService;
     }
 
     public void startDockerComposeFile(File dockerComposeFile) {
@@ -45,11 +48,14 @@ public class DockerComposeFacade {
             final DockerCompose dockerCompose = dockerComposeReader.read(dockerComposeYML);
             final File usersLatestDockerComposeFile = new File(FileUtils.getTempDirectory(), dockerCompose.getHsbUsername());
             final Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
-            //TODO: check for users resources
-            //TODO: if enough resources proceed
-            DockerCompose fixedDockerCompose = dockerComposeFixer.fix(violations, dockerCompose);
-            dockerComposeWriter.write(usersLatestDockerComposeFile, fixedDockerCompose);
-            dockerComposeService.startComposeFile(usersLatestDockerComposeFile);
+            final DockerCompose fixedDockerCompose = dockerComposeFixer.fix(violations, dockerCompose);
+
+            if( resourceAuthorizeService.isAuthorized(dockerCompose) ) {
+                dockerComposeWriter.write(usersLatestDockerComposeFile, fixedDockerCompose);
+                dockerComposeService.startComposeFile(usersLatestDockerComposeFile);
+            } else {
+                logger.debug("Not enough resources for user request.");
+            }
         } catch (IOException e) {
             logger.error("IO Failure", e);
         }
