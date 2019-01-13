@@ -36,7 +36,6 @@ public class SingleStatCallbackTest extends ContainerIT {
     public void getLatestStatsWithTimeout() throws InterruptedException, IOException {
         final Optional<Statistics> latestStatsWithTimeout = singleStatCallback.getLatestStatsWithTimeout(10);
         Boolean gotStats = singleStatCallback.gotStats();
-        singleStatCallback.close();
 
         assertThat(gotStats).isTrue();
         assertThat(latestStatsWithTimeout).isPresent();
@@ -46,7 +45,6 @@ public class SingleStatCallbackTest extends ContainerIT {
     public void getNoLatestStatsWithTimeout() throws InterruptedException, IOException {
         final Optional<Statistics> latestStatsWithTimeout = singleStatCallback.getLatestStatsWithTimeout(0);
         Boolean gotStats = singleStatCallback.gotStats();
-        singleStatCallback.close();
 
         assertThat(gotStats).isFalse();
         assertThat(latestStatsWithTimeout).isNotPresent();

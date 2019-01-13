@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -41,7 +40,7 @@ class DockerStatsServiceImpl implements DockerStatsService {
             logger.debug("Memory limit (stats): {}", memory);
 
             return new Stats(memory, cpuPercent);
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error("Failed to read stats", e);
         }
