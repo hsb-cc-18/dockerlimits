@@ -57,6 +57,6 @@ public class DockerComposeResourceAnalyzerServiceTest {
         final ImmutableMap<String, ServiceSpec> services = ImmutableMap.<String, ServiceSpec>builder().put("nginx", nginx).build();
         when(dockerCompose.getServices()).thenReturn(services);
 
-        assertThatCode(() -> dockerComposeResourceAnalyzerService.sumResources(dockerCompose)).hasMessage(COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE);
+        assertThatCode(() -> dockerComposeResourceAnalyzerService.sumResources(dockerCompose).get()).hasMessageEndingWith(COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE);
     }
 }
