@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -29,9 +28,8 @@ class DockerStatsServiceImpl implements DockerStatsService {
     @Override
     public Stats getStats(@Nonnull String containerId) {
         Stats stats = null;
-        final SingleStatCallback resultCallback = new SingleStatCallback();
         try {
-            final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(resultCallback);
+            final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
             final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No Stats received"));
             final String memory = String.valueOf(latestStats.getMemoryStats().getLimit());
@@ -45,12 +43,6 @@ class DockerStatsServiceImpl implements DockerStatsService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error("Failed to read stats", e);
-        } finally {
-            try {
-                resultCallback.close();
-            } catch (IOException e) {
-                logger.error("Failed to close stats callback", e);
-            }
         }
 
         return null;
