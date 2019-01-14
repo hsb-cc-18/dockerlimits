@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static com.shazam.shazamcrest.matcher.Matchers.sameBeanAs;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.not;
 
@@ -38,25 +38,25 @@ public class ConfigTest {
 
     @Test
     public void testMemLimitProperties() throws IOException {
-        assert this.config.getMem_limit() == 1024;
+       assertThat(this.config.getMem_limit()).isEqualTo(1024);
     }
 
     @Test
     public void testCpuPercentProperties() throws IOException {
-        assert this.config.getCpu_percent() == 20;
+        assertThat(this.config.getCpu_percent()).isEqualTo(20);
     }
 
     @Test
     public void testMemLimitGetter() throws IOException {
         int mem_limit = 512;
         this.config.setMem_limit(mem_limit);
-        assert this.config.getMem_limit() == mem_limit;
+        assertThat(this.config.getMem_limit()).isEqualTo(mem_limit);
     }
 
     @Test
     public void testCpuPercentGetter() throws IOException {
         int cpu_percent = 25;
         this.config.setCpu_percent(cpu_percent);
-        assert this.config.getCpu_percent() == cpu_percent;
+        assertThat(this.config.getCpu_percent()).isEqualTo(cpu_percent);
     }
 }
