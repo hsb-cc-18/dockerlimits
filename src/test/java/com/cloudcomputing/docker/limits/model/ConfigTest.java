@@ -1,40 +1,31 @@
 package com.cloudcomputing.docker.limits.model;
 
-import com.cloudcomputing.docker.limits.io.DockerComposeReader;
-import com.cloudcomputing.docker.limits.io.DockerComposeWriter;
 import com.cloudcomputing.docker.limits.model.config.Config;
-import com.cloudcomputing.docker.limits.model.io.DockerCompose;
-import org.apache.commons.io.FileUtils;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.not;
 
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ConfigTest {
-    //@Autowired
-    Config config ;//= new Config();
 
+
+    @Autowired
+    Config config;
 
     @Before
     public void setUp() throws IOException {
-        this.config = new Config();
     }
-
-
 
     @Test
     public void testMemLimitProperties() throws IOException {
