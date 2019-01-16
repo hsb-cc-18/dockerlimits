@@ -1,6 +1,7 @@
 package com.cloudcomputing.docker.limits.model.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -12,6 +13,7 @@ import java.io.*;
 
 @Component
 public class ConfigImpl {
+    final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
     private ObjectReader objectReader;
     private  final File configFile = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
     ConfigJson config;
@@ -22,13 +24,16 @@ public class ConfigImpl {
 
 
     public void loadConfig() throws IOException{
-        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
+
         this.config =  mapper.readValue(configFile, ConfigJson.class);
     }
 
-
-
-
+    public void saveConfig() throws IOException {
+        //Convert object to JSON string and pretty print
+        String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(config);
+        System.out.println(jsonInString);
+        mapper.writeValue(this.configFile, config);
+    }
 
     public int getMem_limit(String role){
        if (this.config.getResourceLimits().containsKey(role))

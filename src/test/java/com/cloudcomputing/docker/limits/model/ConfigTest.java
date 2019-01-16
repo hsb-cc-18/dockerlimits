@@ -51,4 +51,25 @@ public class ConfigTest {
         this.config.setCpu_percent("student",cpu_percent);
         assertThat(this.config.getCpu_percent("student")).isEqualTo(cpu_percent);
     }
+
+    @Test
+    public void testSaveConfig() throws IOException {
+        Double cpu_percent_tmp = this.config.getCpu_percent("student");
+        int mem_limit_tmp = this.config.getMem_limit("student");
+
+        Double cpu_percent = 77.0;
+        int mem_limit = 77;
+        this.config.setCpu_percent("student",cpu_percent);
+        this.config.setMem_limit("student",mem_limit);
+        this.config.saveConfig();
+        this.config.setCpu_percent("student",0.0);
+        this.config.setMem_limit("student",0);
+        this.config.loadConfig();
+        assertThat(this.config.getCpu_percent("student")).isEqualTo(cpu_percent);
+        assertThat(this.config.getMem_limit("student")).isEqualTo(mem_limit);
+        this.config.setCpu_percent("student",cpu_percent_tmp);
+        this.config.setMem_limit("student",mem_limit_tmp);
+        this.config.saveConfig();
+
+    }
 }
