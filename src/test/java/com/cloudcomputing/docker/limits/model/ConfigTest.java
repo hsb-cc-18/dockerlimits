@@ -22,7 +22,7 @@ public class ConfigTest {
 
 
     @Autowired
-    Config config;
+    ConfigImpl config;
 
     @Before
     public void setUp() throws IOException {

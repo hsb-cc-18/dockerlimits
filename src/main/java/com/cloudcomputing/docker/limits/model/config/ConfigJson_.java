@@ -1,14 +1,22 @@
 package com.cloudcomputing.docker.limits.model.config;
 
+
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConfigJson {
+public class ConfigJson_ {
+
+/*    @JsonProperty("resourceLimits")
+    public Map<String, ResourcesSpec> resourceLimits;
+*/
     @JsonProperty("mem_limit")
     private int mem_limit;
 
@@ -31,5 +39,12 @@ public class ConfigJson {
     public void setMem_limit(int mem_limit) {
         this.mem_limit = mem_limit;
     }
+
+
+ /*   public Map<String, ResourcesSpec> getResourceLimits() {
+        return resourceLimits;
+    }
+*/
+
 
 }
