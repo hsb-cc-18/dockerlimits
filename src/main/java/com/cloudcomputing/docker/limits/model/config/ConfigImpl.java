@@ -1,7 +1,5 @@
 package com.cloudcomputing.docker.limits.model.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -11,30 +9,44 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 
+/**
+ *
+ */
 @Component
-public class ConfigImpl {
-    final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
+public class ConfigImpl implements Config{
+    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
     private ObjectReader objectReader;
-    private  final File configFile = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
-    ConfigJson config;
+    private final File configFile = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
+    private ConfigJson config;
+
+
     @Autowired
-    public ConfigImpl(final ObjectReader objectReader) {
+    public ConfigImpl(final ObjectReader objectReader) throws IOException {
         this.objectReader = objectReader;
+        this.load();
     }
 
-
-    public void loadConfig() throws IOException{
-
+    /**
+     * loads configuration from file
+     * @throws IOException
+     */
+    public void load() throws IOException{
         this.config =  mapper.readValue(configFile, ConfigJson.class);
     }
 
-    public void saveConfig() throws IOException {
-        //Convert object to JSON string and pretty print
-        String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(config);
-        System.out.println(jsonInString);
+    /**
+     * saves configuration into file
+     * @throws IOException
+     */
+    public void save() throws IOException {
         mapper.writeValue(this.configFile, config);
     }
 
+    /**
+     * gets mempory limit for specified role
+     * @param role role of user (student etc.)
+     * @return maximum allowabale memory usage for role
+     */
     public int getMem_limit(String role){
        if (this.config.getResourceLimits().containsKey(role))
             return this.config.getResourceLimits().get(role).mem_limit;
@@ -43,6 +55,11 @@ public class ConfigImpl {
      //return this.config.getMem_limit();
     }
 
+    /**
+     * gets cpu percentage for specifeid role
+     * @param role role of user (student etc.)
+     * @return cpu usage in percent
+     */
     public Double getCpu_percent(String role){
         if (this.config.getResourceLimits().containsKey(role))
             return this.config.getResourceLimits().get(role).cpu_percent;
@@ -50,6 +67,11 @@ public class ConfigImpl {
             throw new IllegalArgumentException("Given role is not existing");
     }
 
+    /**
+     * sets memory limit for specified role
+     * @param role role of user (student etc.)
+     * @param mem_limit maximum allowabale memory usage for role
+     */
     public void setMem_limit(String role, int mem_limit){
         assert mem_limit >= 0;
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
@@ -60,6 +82,11 @@ public class ConfigImpl {
             throw new IllegalArgumentException("Given role is not existing");
     }
 
+    /**
+     * sets cpu percentage for specified role
+     * @param role role of user (student etc.)
+     * @param cpu_percent cpu usage in percent
+     */
     public void setCpu_percent(String role, Double cpu_percent) {
         assert cpu_percent >= 0;
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not

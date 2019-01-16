@@ -1,5 +1,6 @@
 package com.cloudcomputing.docker.limits.model;
 
+import com.cloudcomputing.docker.limits.model.config.Config;
 import com.cloudcomputing.docker.limits.model.config.ConfigImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +22,11 @@ public class ConfigTest {
 
 
     @Autowired
-    ConfigImpl config;
+    Config config;
 
     @Before
     public void setUp() throws IOException {
-        this.config.loadConfig();
+        this.config.load();
     }
 
     @Test
@@ -54,22 +55,31 @@ public class ConfigTest {
 
     @Test
     public void testSaveConfig() throws IOException {
-        Double cpu_percent_tmp = this.config.getCpu_percent("student");
-        int mem_limit_tmp = this.config.getMem_limit("student");
-
+        //new values
+        String role = "student";
         Double cpu_percent = 77.0;
         int mem_limit = 77;
-        this.config.setCpu_percent("student",cpu_percent);
-        this.config.setMem_limit("student",mem_limit);
-        this.config.saveConfig();
-        this.config.setCpu_percent("student",0.0);
-        this.config.setMem_limit("student",0);
-        this.config.loadConfig();
-        assertThat(this.config.getCpu_percent("student")).isEqualTo(cpu_percent);
-        assertThat(this.config.getMem_limit("student")).isEqualTo(mem_limit);
-        this.config.setCpu_percent("student",cpu_percent_tmp);
-        this.config.setMem_limit("student",mem_limit_tmp);
-        this.config.saveConfig();
+
+        //keep original values
+        Double cpu_percent_tmp = this.config.getCpu_percent(role);
+        int mem_limit_tmp = this.config.getMem_limit(role);
+
+        //set new values and save them in config
+        this.config.setCpu_percent(role,cpu_percent);
+        this.config.setMem_limit(role,mem_limit);
+        this.config.save();
+        //set config to any other values
+        this.config.setCpu_percent(role,0.0);
+        this.config.setMem_limit(role,0);
+        //load config with new values
+        this.config.load();
+        //check loaded values euals new values
+        assertThat(this.config.getCpu_percent(role)).isEqualTo(cpu_percent);
+        assertThat(this.config.getMem_limit(role)).isEqualTo(mem_limit);
+        //set all values back to original and save them
+        this.config.setCpu_percent(role,cpu_percent_tmp);
+        this.config.setMem_limit(role,mem_limit_tmp);
+        this.config.save();
 
     }
 }
