@@ -1,0 +1,11 @@
+---
+resourceLimits:
+  student:
+    mem_limit: 1024
+    cpu_percent: 20.0
+  lecturer:
+    mem_limit: 1024
+    cpu_percent: 20.0
+  other:
+    mem_limit: 1024
+    cpu_percent: 20.0
