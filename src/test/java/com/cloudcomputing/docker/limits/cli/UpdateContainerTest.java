@@ -1,5 +1,4 @@
-package com.cloudcomputing.docker.limits;
-
+package com.cloudcomputing.docker.limits.cli;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,21 +13,20 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {
-		InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
-		ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
+        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
+        ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
 })
-public class ApplicationTests {
+public class UpdateContainerTest {
 
-	@Autowired
-	private Shell shell;
+    @Autowired
+    private Shell shell;
 
-	@Test
-	public void contextLoads() {
-		assertNotNull(shell);
+    @Test
+    public void contextLoads() {
+        assertNotNull(shell);
 
-		Object help = shell.evaluate(() -> "help");
-		assertNotNull(help);
-		System.out.println(help);
-	}
-
+        Object help = shell.evaluate(() -> "help");
+        assertNotNull(help);
+        System.out.println(help);
+    }
 }

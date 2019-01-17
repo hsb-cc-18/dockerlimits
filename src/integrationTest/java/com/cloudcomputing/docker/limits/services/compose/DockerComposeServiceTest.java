@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
@@ -18,7 +20,10 @@ import java.net.URISyntaxException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(properties = {
+        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
+        ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
+})
 public class DockerComposeServiceTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
