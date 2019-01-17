@@ -81,6 +81,7 @@ dependencies {
     testCompile 'org.hibernate.validator:hibernate-validator-test-utils:6.0.13.Final'
     implementation 'com.github.rozidan:logger-spring-boot:b77b432764'
     implementation 'com.github.palantir.docker-compose-rule:docker-compose-rule-junit4:0.34.0'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     implementation ('de.xn--ho-hia.storage_units:storage-units:4.0.0-20160812154711') {
         exclude group: 'de.xn--ho-hia.quality', module: 'null-analysis'
     }
@@ -93,6 +94,7 @@ dependencies {
 
     testCompile group: 'com.shazam', name: 'shazamcrest', version: '0.11'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    
 }
 
 task integrationTest(type: Test) {

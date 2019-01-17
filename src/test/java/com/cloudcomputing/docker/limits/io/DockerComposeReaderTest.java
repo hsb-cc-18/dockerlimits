@@ -23,6 +23,7 @@ public class DockerComposeReaderTest {
 
     @Test
     public void read() throws IOException {
+
         final InputStream dockerComposeYML = getClass().getResource("docker-compose-with-username.yml").openStream();
         final DockerCompose dockerCompose = dockerComposeReader.read(dockerComposeYML);
         assertThat(dockerCompose.getHsbUsername()).isEqualTo("czoeller");
