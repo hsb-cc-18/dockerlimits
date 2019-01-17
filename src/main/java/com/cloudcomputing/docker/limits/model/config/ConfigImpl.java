@@ -47,7 +47,7 @@ public class ConfigImpl implements Config{
      * @param role role of user (student etc.)
      * @return maximum allowabale memory usage for role
      */
-    public int getMem_limit(String role){
+    public String getMem_limit(String role){
        if (this.config.getResourceLimits().containsKey(role))
             return this.config.getResourceLimits().get(role).mem_limit;
         else
@@ -60,7 +60,7 @@ public class ConfigImpl implements Config{
      * @param role role of user (student etc.)
      * @return cpu usage in percent
      */
-    public Double getCpu_percent(String role){
+    public int getCpu_percent(String role){
         if (this.config.getResourceLimits().containsKey(role))
             return this.config.getResourceLimits().get(role).cpu_percent;
         else
@@ -72,8 +72,7 @@ public class ConfigImpl implements Config{
      * @param role role of user (student etc.)
      * @param mem_limit maximum allowabale memory usage for role
      */
-    public void setMem_limit(String role, int mem_limit){
-        assert mem_limit >= 0;
+    public void setMem_limit(String role, String mem_limit){
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
         {
             this.config.getResourceLimits().get(role).mem_limit = mem_limit;// increment the value by 1 to an already existing key
@@ -87,8 +86,9 @@ public class ConfigImpl implements Config{
      * @param role role of user (student etc.)
      * @param cpu_percent cpu usage in percent
      */
-    public void setCpu_percent(String role, Double cpu_percent) {
-        assert cpu_percent >= 0;
+    public void setCpu_percent(String role, int cpu_percent) {
+        if(cpu_percent<0 || cpu_percent >100)
+            throw new IllegalArgumentException("CPU percantage must be between 0 and 100!");
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
         {
             this.config.getResourceLimits().get(role).cpu_percent = cpu_percent;// increment the value by 1 to an already existing key
