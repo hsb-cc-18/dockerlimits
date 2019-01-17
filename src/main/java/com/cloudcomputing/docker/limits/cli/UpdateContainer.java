@@ -10,4 +10,12 @@ public class UpdateContainer {
     public void updateMemory(String memoryLimit, String containerId) {
         System.out.println("TODO");
     }
+    @ShellMethod(key = "update-cpu", value = "Update memory limit of a container")
+    public void updateCpu(String cpuLimit, String containerId) {
+        System.out.println("TODO");
+    }
+    @ShellMethod(key = "update-bandwidth", value = "Update memory limit of a container")
+    public void updateBandwidth(String bandwidthLimit, String containerId) {
+        System.out.println("TODO");
+    }
 }
