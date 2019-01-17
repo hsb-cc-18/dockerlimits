@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ShellComponent
-public class ListContainer {
+public class ListContainers {
 
     private final DockerLabelService dockerLabelService;
     private final ContainerDetailsService containerDetailsService;
 
     @Autowired
-    ListContainer(DockerLabelService dockerLabelService, ContainerDetailsService containerDetailsService) {
+    ListContainers(DockerLabelService dockerLabelService, ContainerDetailsService containerDetailsService) {
         this.dockerLabelService = dockerLabelService;
         this.containerDetailsService = containerDetailsService;
     }
