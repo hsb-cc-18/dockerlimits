@@ -1,11 +1,11 @@
 ---
 resourceLimits:
-  student:
-    mem_limit: 1024
-    cpu_percent: 20.0
-  lecturer:
-    mem_limit: 1024
-    cpu_percent: 20.0
-  other:
-    mem_limit: 1024
-    cpu_percent: 20.0
+  HSB_STUDENT:
+    mem_limit: 1G
+    cpu_percent: 20
+  HSB_MEMBER:
+    mem_limit: 2G
+    cpu_percent: 20
+  HSB_PROF:
+    mem_limit: 1G
+    cpu_percent: 20
