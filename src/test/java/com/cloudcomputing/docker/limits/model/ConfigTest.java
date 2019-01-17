@@ -35,32 +35,34 @@ public class ConfigTest {
 
     @Test
     public void testMemLimitProperties() throws IOException {
-       assertThat(this.config.getMem_limit("HSB-STUDENT")).isEqualTo("1G");
+       assertThat(this.config.getMem_limit("HSB_STUDENT")).isEqualTo("1G");
     }
 
     @Test
     public void testCpuPercentProperties() throws IOException {
-        assertThat(this.config.getCpu_percent("HSB-STUDENT")).isEqualTo(20);
+        assertThat(this.config.getCpu_percent("HSB_STUDENT")).isEqualTo(20);
     }
 
     @Test
     public void testMemLimitGetter() throws IOException {
         String mem_limit = "512K";
-        this.config.setMem_limit("HSB-STUDENT",mem_limit);
-        assertThat(this.config.getMem_limit("HSB-STUDENT")).isEqualTo(mem_limit);
+        String role = "HSB_STUDENT";
+        this.config.setMem_limit(role,mem_limit);
+        assertThat(this.config.getMem_limit(role)).isEqualTo(mem_limit);
     }
 
     @Test
     public void testCpuPercentGetter() throws IOException {
         int cpu_percent = 25;
-        this.config.setCpu_percent("HSB-STUDENT",cpu_percent);
-        assertThat(this.config.getCpu_percent("HSB-STUDENT")).isEqualTo(cpu_percent);
+        String role = "HSB_STUDENT";
+        this.config.setCpu_percent(role,cpu_percent);
+        assertThat(this.config.getCpu_percent(role)).isEqualTo(cpu_percent);
     }
 
     @Test
     public void testSaveConfig() throws IOException {
         //new values
-        String role = "HSB-STUDENT";
+        String role = "HSB_STUDENT";
         int cpu_percent = 77;
         String mem_limit = "77";
 

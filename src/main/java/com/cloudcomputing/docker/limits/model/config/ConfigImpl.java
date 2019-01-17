@@ -51,7 +51,7 @@ public class ConfigImpl implements Config{
        if (this.config.getResourceLimits().containsKey(role))
             return this.config.getResourceLimits().get(role).mem_limit;
         else
-            throw new IllegalArgumentException("Given role is not existing");
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
      //return this.config.getMem_limit();
     }
 
@@ -64,7 +64,7 @@ public class ConfigImpl implements Config{
         if (this.config.getResourceLimits().containsKey(role))
             return this.config.getResourceLimits().get(role).cpu_percent;
         else
-            throw new IllegalArgumentException("Given role is not existing");
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
     }
 
     /**
@@ -78,7 +78,7 @@ public class ConfigImpl implements Config{
             this.config.getResourceLimits().get(role).mem_limit = mem_limit;// increment the value by 1 to an already existing key
         }
         else
-            throw new IllegalArgumentException("Given role is not existing");
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
     }
 
     /**
@@ -94,6 +94,6 @@ public class ConfigImpl implements Config{
             this.config.getResourceLimits().get(role).cpu_percent = cpu_percent;// increment the value by 1 to an already existing key
         }
         else
-            throw new IllegalArgumentException("Given role is not existing");
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
     }
 }
