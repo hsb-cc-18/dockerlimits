@@ -1,7 +1,7 @@
 package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
-import com.cloudcomputing.docker.limits.services.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.Stats;
 import de.xn__ho_hia.storage_unit.Megabyte;
 import org.springframework.stereotype.Service;
 
