@@ -1,5 +1,6 @@
 package com.cloudcomputing.docker.limits.services.stats;
 
+import com.cloudcomputing.docker.limits.model.stats.Stats;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Statistics;
