@@ -24,18 +24,18 @@ public class FileManager {
     public File getConfigFile() throws IOException {
         System.out.println(configFileOriginPath.toAbsolutePath().toString());
         System.out.println(userConfigFilePath);
-        File d = new File(userAppDirectory.toString());
-        File f = new File(userConfigFilePath.toString());
+        File appDirectory = new File(userAppDirectory.toString());
+        File configFile = new File(userConfigFilePath.toString());
 
-        if(!d.exists() || !d.isDirectory()){
-            System.out.println("Ordner Anlegen");
+        if(!appDirectory.exists() || !appDirectory.isDirectory()){
+            System.out.println("Create Directory");
             Boolean directoryMade = (new File(userAppDirectory.toString())).mkdirs();
             if (!directoryMade) {
                 throw new IOException("Could not create path: " + userAppDirectory.toString());
             }
         }
-        if(!(f.exists())) {
-            System.out.println("File Anlegen");
+        if(!(configFile.exists())) {
+            System.out.println("Create File");
 
             try{
                 CopyOption[] options = new CopyOption[]{
@@ -47,10 +47,10 @@ public class FileManager {
                 throw  new IOException("Could not create config File: " + userConfigFilePath.toString(), e);
             }
         }
-        System.out.println("File lesen");
+        System.out.println("Read File");
 
 
-        return f;
+        return configFile;
 
     }
 }
