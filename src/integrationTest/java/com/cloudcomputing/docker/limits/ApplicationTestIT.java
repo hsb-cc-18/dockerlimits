@@ -1,14 +1,17 @@
 package com.cloudcomputing.docker.limits;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {
@@ -20,9 +23,20 @@ public class ApplicationTestIT {
 	@Autowired
 	private ApplicationContext context;
 
+	@Autowired
+	private Shell shell;
+
 	@Test
 	public void contextLoads() {
-		Assertions.assertThat(context).isNotNull();
+		assertThat(context).isNotNull();
 	}
 
+	@Test
+	public void printsHelp() {
+		assertThat(shell).isNotNull();
+
+		Object help = shell.evaluate(() -> "help");
+		assertThat(help).isNotNull();
+		System.out.println(help);
+	}
 }
