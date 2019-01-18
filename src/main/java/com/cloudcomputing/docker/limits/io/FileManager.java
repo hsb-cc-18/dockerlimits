@@ -22,8 +22,8 @@ public class FileManager {
     public FileManager() {}
 
     public File getConfigFile() throws IOException {
-        System.out.println(configFileOriginPath.toAbsolutePath().toString());
-        System.out.println(userConfigFilePath);
+        //System.out.println(configFileOriginPath.toAbsolutePath().toString());
+        //System.out.println(userConfigFilePath);
         File appDirectory = new File(userAppDirectory.toString());
         File configFile = new File(userConfigFilePath.toString());
 
