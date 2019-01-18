@@ -29,7 +29,6 @@ public class ContainerDetailsServiceImplTest extends ContainerIT {
         final ContainerDetails containerDetails = containerDetailsService.getContainerDetails(getContainerId());
         assertThat(containerDetails).isNotNull();
         assertThat(containerDetails.getName()).isEqualTo(container.getContainerInfo().name());
-        assertThat(containerDetails.getImage()).isEqualTo(container.getContainerInfo().image());
         assertThat(new DateTime(containerDetails.getCreated())).isEqualToIgnoringSeconds(new DateTime(
                 container.getContainerInfo()
                          .created()));
