@@ -72,7 +72,7 @@ public class ContainerDetails {
             {
                 String value = null;
                 try {
-                    value = String.valueOf(m.invoke(this, null));
+                    value = String.valueOf(m.invoke(this));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
