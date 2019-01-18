@@ -1,5 +1,6 @@
 package com.cloudcomputing.docker.limits.model.config;
 
+import com.cloudcomputing.docker.limits.io.FileManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -16,8 +17,9 @@ import java.io.*;
 public class ConfigImpl implements Config{
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
     private ObjectReader objectReader;
-    private final File configFile = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
+    private  File configFile;// = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
     private ConfigJson config;
+    private FileManager fileManager = new FileManager();
 
 
     @Autowired
@@ -31,6 +33,7 @@ public class ConfigImpl implements Config{
      * @throws IOException
      */
     public void load() throws IOException{
+        this.configFile = fileManager.getConfigFile();
         this.config =  mapper.readValue(configFile, ConfigJson.class);
     }
 
