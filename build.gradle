@@ -88,6 +88,7 @@ dependencies {
         exclude group: 'de.xn--ho-hia.quality', module: 'null-analysis'
     }
     implementation 'com.github.sebhoss:null-analysis:null-analysis-3.0.2-20170108184519'
+    implementation 'de.vandermeer:asciitable:0.3.2'
     testCompile "org.assertj:assertj-core:3.11.1"
     testCompile 'org.assertj:assertj-joda-time:2.2.0'
     // Junit docker rule, following 3 dependencies. https://github.com/tdomzal/junit-docker-rule/issues/42:
