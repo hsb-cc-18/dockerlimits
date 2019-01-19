@@ -1,8 +1,5 @@
 package com.cloudcomputing.docker.limits;
 
-import com.cloudcomputing.docker.limits.api.DockerComposeFacade;
-import org.jline.utils.AttributedString;
-import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,11 +13,6 @@ import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfig
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.shell.jline.PromptProvider;
-
-import javax.annotation.Nonnull;
-import java.io.File;
 
 @SpringBootApplication(exclude = {
         DispatcherServletAutoConfiguration.class,
@@ -34,24 +26,15 @@ import java.io.File;
 })
 public class Application implements CommandLineRunner {
 
-    private final File dockerComposeFile = new File(getClass().getResource("io/docker-compose-with-username-and-service-labeled.yml").getFile());
-
-
     private final ConfigurableApplicationContext ctx;
 
     @Autowired
-    public Application(@Nonnull DockerComposeFacade dockerComposeFacade, ConfigurableApplicationContext ctx) {
-
+    public Application(ConfigurableApplicationContext ctx) {
         this.ctx = ctx;
     }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-    }
-
-    @Bean
-    public PromptProvider myPromptProvider() {
-        return () -> new AttributedString("dockerlimits:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
     }
 
     /**
