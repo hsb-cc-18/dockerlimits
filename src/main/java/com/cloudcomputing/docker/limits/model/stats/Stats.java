@@ -12,26 +12,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Stats {
-    //public Double cpus;
-    public Integer cpu_percent;
-    //public Integer cpu_count, cpu_shares,  cpu_quota;
 
-    public Megabyte mem_limit;
+    private Integer cpu_shares;
+    private Megabyte mem_limit;
 
-    //public String cpu_period, cpuset, memswap_limit, mem_swappiness, mem_reservation, shm_size;
-
-    public Stats(String mem_limit, Integer cpu_percent) {
+    public Stats(String mem_limit, Integer cpu_shares) {
         this.mem_limit = Megabyte.valueOf(toBytes(mem_limit));
-        this.cpu_percent = cpu_percent;
+        this.cpu_shares = cpu_shares;
     }
 
     public Stats add(@Nonnull Stats stats) {
-        int cpu_percent = this.cpu_percent + stats.cpu_percent;
+        int cpu_percent = this.cpu_shares + stats.cpu_shares;
         return new Stats(this.mem_limit.add(stats.mem_limit).toString(), cpu_percent);
     }
 
-    public Long getMem_limit() {
-        return mem_limit.longValue();
+    public Megabyte getMem_limit() {
+        return mem_limit;
+    }
+
+    public Integer getCpu_shares() {
+        return cpu_shares;
     }
 
     // https://stackoverflow.com/questions/12090598/parsing-human-readable-filesizes-in-java-to-bytes

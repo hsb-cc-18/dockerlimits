@@ -20,7 +20,7 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
     private final DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
     //TODO: dynamic depending on user role
     private final static Megabyte mem_limit_role = StorageUnits.megabyte(2048);
-    private final static int cpu_percent_role = 100;
+    private final static int cpu_shares_role = 1024;
 
     @Autowired
     public ResourceAuthorizeServiceImpl(ResourceUsageService resourceUsageService, DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService) {
@@ -36,7 +36,7 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
         final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
         final Stats wouldAllocReources = usedResources.add(requestedResources);
 
-        if(mem_limitFits(wouldAllocReources) && cpu_percentFits(wouldAllocReources)) {
+        if(mem_limitFits(wouldAllocReources) && cpu_sharesFits(wouldAllocReources)) {
             isAuthorized = true;
         } else {
             isAuthorized = false;
@@ -46,12 +46,12 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
         return isAuthorized;
     }
 
-    private boolean cpu_percentFits(Stats wouldAllocReources) {
-        return cpu_percent_role - wouldAllocReources.cpu_percent > 0;
+    private boolean cpu_sharesFits(Stats wouldAllocReources) {
+        return cpu_shares_role - wouldAllocReources.getCpu_shares() > 0;
     }
 
     private boolean mem_limitFits(Stats wouldAllocReources) {
-        return mem_limit_role.subtract(wouldAllocReources.mem_limit).longValue() > 0;
+        return mem_limit_role.subtract(wouldAllocReources.getMem_limit()).longValue() > 0;
     }
 
 }

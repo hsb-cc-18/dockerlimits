@@ -43,6 +43,6 @@ public class DockerComposeReaderTest {
         assertThat(dockerCompose.getServices()).containsKey("web");
         final ServiceSpec serviceWeb = Objects.requireNonNull(dockerCompose.getServices()).get("web");
         assertThat(serviceWeb.mem_limit).isEqualTo("50M");
-        assertThat(serviceWeb.cpu_percent).isEqualTo(50);
+        assertThat(serviceWeb.cpu_shares).isEqualTo(50);
     }
 }

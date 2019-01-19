@@ -36,10 +36,10 @@ public class DockerComposeResourceAnalyzerServiceTest {
     public void sumResources() {
         final ServiceSpec nginx = new ServiceSpec();
         nginx.mem_limit = "10G";
-        nginx.cpu_percent = 20;
+        nginx.cpu_shares = 20;
         final ServiceSpec busybox = new ServiceSpec();
         busybox.mem_limit = "6G";
-        busybox.cpu_percent = 60;
+        busybox.cpu_shares = 60;
         final ImmutableMap<String, ServiceSpec> services = ImmutableMap.<String, ServiceSpec>builder().put("nginx", nginx)
                                                                                                       .put("busybox", busybox)
                                                                                                       .build();
@@ -47,8 +47,8 @@ public class DockerComposeResourceAnalyzerServiceTest {
 
         final Stats stats = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
 
-        assertThat(stats.mem_limit).isEqualTo(gigabyte(16));
-        assertThat(stats.cpu_percent).isEqualTo(80);
+        assertThat(stats.getMem_limit()).isEqualTo(gigabyte(16));
+        assertThat(stats.getCpu_shares()).isEqualTo(80);
     }
 
     @Test

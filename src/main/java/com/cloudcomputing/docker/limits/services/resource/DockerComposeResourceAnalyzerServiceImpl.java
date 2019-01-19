@@ -24,11 +24,11 @@ public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeRe
                                                                      .map(Megabyte::valueOf)
                                                                      .reduce(Megabyte::add);
 
-        int cpu_requested = dockerCompose.getServices()
+        int cpushares_requested = dockerCompose.getServices()
                                      .values()
                                      .stream()
-                                     .filter(s -> s.cpu_percent != null && s.cpu_percent >= 0)
-                                     .map(s -> s.cpu_percent)
+                                     .filter(s -> s.cpu_shares != null && s.cpu_shares >= 0)
+                                     .map(s -> s.cpu_shares)
                                      .mapToInt(Integer::intValue)
                                      .sum();
 
@@ -36,6 +36,6 @@ public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeRe
             throw new IllegalStateException(COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE);
         }
 
-        return new Stats(mem_limit_requestOpt.get().toString(), cpu_requested);
+        return new Stats(mem_limit_requestOpt.get().toString(), cpushares_requested);
     }
 }
