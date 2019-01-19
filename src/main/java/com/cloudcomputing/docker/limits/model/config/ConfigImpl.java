@@ -17,14 +17,15 @@ import java.io.*;
 public class ConfigImpl implements Config{
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
     private ObjectReader objectReader;
-    private  File configFile;// = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
+    private File configFile;// = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
     private ConfigJson config;
-    private FileManager fileManager = new FileManager();
+    private final FileManager fileManager;
 
 
     @Autowired
-    public ConfigImpl(final ObjectReader objectReader) throws IOException {
+    public ConfigImpl(final ObjectReader objectReader, FileManager fileManager) throws IOException {
         this.objectReader = objectReader;
+        this.fileManager = fileManager;
         this.load();
     }
 

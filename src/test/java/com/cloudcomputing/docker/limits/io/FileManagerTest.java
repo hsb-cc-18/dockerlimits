@@ -2,7 +2,10 @@ package com.cloudcomputing.docker.limits.io;
 
 
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,21 +17,25 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
         ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
 })
 public class FileManagerTest {
-    public static Path userAppDirectory = Paths.get(System.getProperty("user.home") + "/dockerlimits");
-    public static Path userConfigFilePath = Paths.get(userAppDirectory + "/config.yml");
-    public static Path configFileOriginPath = Paths.get("src/main/resources/config.yml");
+    static Path userAppDirectory = FileManager.userAppDirectory;
+    static Path userConfigFilePath = FileManager.userConfigFilePath;
+    static String configFileOriginPath = FileManager.configFileOriginName;
+    static File configFileOriginFile =new File(FileManagerTest.class.getResource(configFileOriginPath).getFile());
 
     @Autowired
     FileManager fileManager;
@@ -38,7 +45,7 @@ public class FileManagerTest {
 
 
     @BeforeClass
-    public static void setUpTest() throws IOException {
+    public static void setUpTest() {
         if(userAppDirectory.toFile().exists())
             keepFolder= true;
         if(userConfigFilePath.toFile().exists())
@@ -46,11 +53,11 @@ public class FileManagerTest {
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, URISyntaxException {
         if(!userAppDirectory.toFile().exists())
             userAppDirectory.toFile().mkdirs();
         if(!userConfigFilePath.toFile().exists())
-            Files.copy(configFileOriginPath, userConfigFilePath, StandardCopyOption.COPY_ATTRIBUTES);
+            Files.copy(Paths.get(getClass().getResource(configFileOriginPath).toURI()), userConfigFilePath, StandardCopyOption.COPY_ATTRIBUTES);
     }
     @After
     public void tearDown() throws IOException {
@@ -70,8 +77,8 @@ public class FileManagerTest {
     public void testGetConfigFile() throws IOException {
         File configFile = this.fileManager.getConfigFile();
         BufferedReader br = new BufferedReader(new FileReader(configFile.toString()));
-        assert br.readLine() != null;
-        assert FileUtils.contentEquals(configFile, configFileOriginPath.toFile());
+        assertThat(br.readLine()).isNotNull();
+        assertThat(configFile).hasSameContentAs(configFileOriginFile);
     }
 
     @Test
@@ -85,8 +92,8 @@ public class FileManagerTest {
         }
         File configFile = this.fileManager.getConfigFile();
         BufferedReader br = new BufferedReader(new FileReader(configFile.toString()));
-        assert br.readLine() != null;
-        assert FileUtils.contentEquals(configFile, configFileOriginPath.toFile());
+        assertThat(br.readLine()).isNotNull();
+        assertThat(configFile).hasSameContentAs(configFileOriginFile);
     }
     @Test
     public void testGetConfigFileDirectoryNotExisting() throws IOException {
@@ -99,7 +106,7 @@ public class FileManagerTest {
         }
         File configFile = this.fileManager.getConfigFile();
         BufferedReader br = new BufferedReader(new FileReader(configFile.toString()));
-        assert br.readLine() != null;
-        assert FileUtils.contentEquals(configFile, configFileOriginPath.toFile());
+        assertThat(br.readLine()).isNotNull();
+        assertThat(configFile).hasSameContentAs(configFileOriginFile);
     }
 }
