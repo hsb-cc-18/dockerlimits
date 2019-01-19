@@ -1,7 +1,5 @@
 package com.cloudcomputing.docker.limits;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
@@ -12,7 +10,6 @@ import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoC
 import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(exclude = {
         DispatcherServletAutoConfiguration.class,
@@ -24,27 +21,10 @@ import org.springframework.context.ConfigurableApplicationContext;
         ThymeleafAutoConfiguration.class,
         WebMvcAutoConfiguration.class,
 })
-public class Application implements CommandLineRunner {
-
-    private final ConfigurableApplicationContext ctx;
-
-    @Autowired
-    public Application(ConfigurableApplicationContext ctx) {
-        this.ctx = ctx;
-    }
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        System.exit(SpringApplication.exit(SpringApplication.run(Application.class, args)));
     }
 
-    /**
-     * Callback used to run the bean.
-     *
-     * @param args incoming main method arguments
-     * @throws Exception on error
-     */
-    @Override
-    public void run(String... args) throws Exception {
-        System.exit(SpringApplication.exit(ctx));
-    }
 }
