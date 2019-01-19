@@ -1,4 +1,4 @@
-package com.cloudcomputing.docker.limits.services.stats;
+package com.cloudcomputing.docker.limits.model.stats;
 
 
 import de.xn__ho_hia.storage_unit.Megabyte;
