@@ -23,7 +23,7 @@ public interface Config {
      * @param role
      * @return
      */
-    public int getCpu_percent(String role);
+    public int getCpu_shares(String role);
 
     /**
      * sets memory limit for specified role
@@ -35,9 +35,9 @@ public interface Config {
     /**
      * sets cpu percentage for specified role
      * @param role
-     * @param cpu_percent
+     * @param cpu_shares
      */
-    public void setCpu_percent(String role, int cpu_percent);
+    public void setCpu_shares(String role, int cpu_shares);
 
 
 }

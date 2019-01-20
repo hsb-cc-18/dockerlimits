@@ -2,10 +2,10 @@
 resourceLimits:
   HSB_STUDENT:
     mem_limit: "1G"
-    cpu_percent: 20
+    cpu_shares: 20
   HSB_MEMBER:
     mem_limit: "2G"
-    cpu_percent: 20
+    cpu_shares: 20
   HSB_PROF:
     mem_limit: "1G"
-    cpu_percent: 20
+    cpu_shares: 20

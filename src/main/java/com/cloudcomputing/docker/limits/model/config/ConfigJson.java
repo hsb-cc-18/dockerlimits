@@ -27,7 +27,7 @@ public class ConfigJson {
     //@JsonProperty("mem_limit")
     private String mem_limit;
 
-    //@JsonProperty("cpu_percent")
+    //@JsonProperty("cpu_shares")
     private int cpu_percent;
 
 

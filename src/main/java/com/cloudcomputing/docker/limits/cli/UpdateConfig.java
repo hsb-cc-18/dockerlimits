@@ -29,8 +29,8 @@ public class UpdateConfig {
         }
         try {
             config.save();
-            System.out.println("New Config saved for \""+role+"\": Memory Limit: " + config.getMem_limit(role) + "CPU Percentage: " + config.getCpu_percent(role));
-            logger.info("Saved config: \""+role+"\": mem = " + config.getMem_limit(role) + ", CPU % = " + config.getCpu_percent(role));
+            System.out.println("New Config saved for \""+role+"\": Memory Limit: " + config.getMem_limit(role) + "CPU Percentage: " + config.getCpu_shares(role));
+            logger.info("Saved config: \""+role+"\": mem = " + config.getMem_limit(role) + ", CPU % = " + config.getCpu_shares(role));
         } catch (IOException e) {
             logger.error("Could not save config: ", e);
             System.out.println("Could not save config");

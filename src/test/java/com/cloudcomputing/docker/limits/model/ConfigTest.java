@@ -40,7 +40,7 @@ public class ConfigTest {
 
     @Test
     public void testCpuPercentProperties() throws IOException {
-        assertThat(this.config.getCpu_percent("HSB_STUDENT")).isEqualTo(20);
+        assertThat(this.config.getCpu_shares("HSB_STUDENT")).isEqualTo(20);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class ConfigTest {
     public void testCpuPercentGetter() throws IOException {
         int cpu_percent = 25;
         String role = "HSB_STUDENT";
-        this.config.setCpu_percent(role,cpu_percent);
-        assertThat(this.config.getCpu_percent(role)).isEqualTo(cpu_percent);
+        this.config.setCpu_shares(role,cpu_percent);
+        assertThat(this.config.getCpu_shares(role)).isEqualTo(cpu_percent);
     }
 
     @Test
@@ -67,23 +67,23 @@ public class ConfigTest {
         String mem_limit = "77";
 
         //keep original values
-        int cpu_percent_tmp = this.config.getCpu_percent(role);
+        int cpu_percent_tmp = this.config.getCpu_shares(role);
         String mem_limit_tmp = this.config.getMem_limit(role);
 
         //set new values and save them in config
-        this.config.setCpu_percent(role,cpu_percent);
+        this.config.setCpu_shares(role,cpu_percent);
         this.config.setMem_limit(role,mem_limit);
         this.config.save();
         //set config to any other values
-        this.config.setCpu_percent(role,0);
+        this.config.setCpu_shares(role,0);
         this.config.setMem_limit(role,"0");
         //load config with new values
         this.config.load();
         //check loaded values euals new values
-        assertThat(this.config.getCpu_percent(role)).isEqualTo(cpu_percent);
+        assertThat(this.config.getCpu_shares(role)).isEqualTo(cpu_percent);
         assertThat(this.config.getMem_limit(role)).isEqualTo(mem_limit);
         //set all values back to original and save them
-        this.config.setCpu_percent(role,cpu_percent_tmp);
+        this.config.setCpu_shares(role,cpu_percent_tmp);
         this.config.setMem_limit(role,mem_limit_tmp);
         this.config.save();
 

@@ -61,9 +61,9 @@ public class ConfigImpl implements Config{
      * @param role role of user (student etc.)
      * @return cpu usage in percent
      */
-    public int getCpu_percent(String role){
+    public int getCpu_shares(String role){
         if (this.config.getResourceLimits().containsKey(role))
-            return this.config.getResourceLimits().get(role).cpu_percent;
+            return this.config.getResourceLimits().get(role).cpu_shares;
         else
             throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
     }
@@ -85,14 +85,14 @@ public class ConfigImpl implements Config{
     /**
      * sets cpu percentage for specified role
      * @param role role of user (student etc.)
-     * @param cpu_percent cpu usage in percent
+     * @param cpu_shares cpu usage in percent
      */
-    public void setCpu_percent(String role, int cpu_percent) {
-        if(cpu_percent<0 || cpu_percent >100)
+    public void setCpu_shares(String role, int cpu_shares) {
+        if(cpu_shares<0 || cpu_shares >1024)
             throw new IllegalArgumentException("CPU percantage must be between 0 and 100!");
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
         {
-            this.config.getResourceLimits().get(role).cpu_percent = cpu_percent;// increment the value by 1 to an already existing key
+            this.config.getResourceLimits().get(role).cpu_shares = cpu_shares;// increment the value by 1 to an already existing key
         }
         else
             throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
