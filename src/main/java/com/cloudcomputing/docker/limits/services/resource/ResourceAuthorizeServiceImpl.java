@@ -2,9 +2,8 @@ package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
 import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.services.limits.LimitsQueryService;
 import com.github.rozidan.springboot.logger.Loggable;
-import de.xn__ho_hia.storage_unit.Megabyte;
-import de.xn__ho_hia.storage_unit.StorageUnits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +13,14 @@ import org.springframework.stereotype.Service;
 @Loggable
 public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
+    private static final Logger logger = LoggerFactory.getLogger(ResourceAuthorizeServiceImpl.class);
+    private final LimitsQueryService limitsQueryService;
     private final ResourceUsageService resourceUsageService;
     private final DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService;
-    //TODO: dynamic depending on user role
-    private final static Megabyte mem_limit_role = StorageUnits.megabyte(2048);
-    private final static int cpu_shares_role = 1024;
 
     @Autowired
-    public ResourceAuthorizeServiceImpl(ResourceUsageService resourceUsageService, DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService) {
+    public ResourceAuthorizeServiceImpl(LimitsQueryService limitsQueryService, ResourceUsageService resourceUsageService, DockerComposeResourceAnalyzerService dockerComposeResourceAnalyzerService) {
+        this.limitsQueryService = limitsQueryService;
         this.resourceUsageService = resourceUsageService;
         this.dockerComposeResourceAnalyzerService = dockerComposeResourceAnalyzerService;
     }
@@ -35,8 +32,9 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
         final Stats usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
         final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
         final Stats wouldAllocResources = usedResources.add(requestedResources);
+        final Stats limits = limitsQueryService.getLimitsForUsername(dockerCompose.getHsbUsername());
 
-        if(mem_limitFits(wouldAllocResources) && cpu_sharesFits(wouldAllocResources)) {
+        if(mem_limitFits(wouldAllocResources, limits) && cpu_sharesFits(wouldAllocResources, limits)) {
             isAuthorized = true;
         } else {
             isAuthorized = false;
@@ -46,12 +44,12 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
         return isAuthorized;
     }
 
-    private boolean cpu_sharesFits(Stats wouldAllocResources) {
-        return cpu_shares_role - wouldAllocResources.getCpu_shares() > 0;
+    private boolean cpu_sharesFits(Stats wouldAllocResources, Stats limits) {
+        return limits.getCpu_shares() - wouldAllocResources.getCpu_shares() > 0;
     }
 
-    private boolean mem_limitFits(Stats wouldAllocResources) {
-        return mem_limit_role.subtract(wouldAllocResources.getMem_limit()).longValue() > 0;
+    private boolean mem_limitFits(Stats wouldAllocResources, Stats limits) {
+        return limits.getMem_limit().subtract(wouldAllocResources.getMem_limit()).longValue() > 0;
     }
 
 }

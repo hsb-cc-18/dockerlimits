@@ -2,6 +2,7 @@ package com.cloudcomputing.docker.limits.model.config;
 
 import com.cloudcomputing.docker.limits.io.FileManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.rozidan.springboot.logger.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
  *
  */
 @Component
+@Loggable
 public class ConfigImpl implements Config{
     private final ObjectMapper mapper; // jackson databind
     private File configFile;// = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
