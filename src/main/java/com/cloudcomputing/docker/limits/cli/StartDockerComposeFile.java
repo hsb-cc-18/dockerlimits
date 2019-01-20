@@ -1,6 +1,7 @@
 package com.cloudcomputing.docker.limits.cli;
 
 import com.cloudcomputing.docker.limits.api.DockerComposeFacade;
+import com.cloudcomputing.docker.limits.cli.provider.FileInputProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -20,8 +21,8 @@ class StartDockerComposeFile {
     }
 
     @ShellMethod(value = "Start a docker-compose file.")
-    public void start(@ShellOption(help = "relative path to docker-compose file") final String dockerComposeFilePath) {
-        final File dockerComposeFile = new File(".", dockerComposeFilePath);
+    public void start(@ShellOption(help = "relative path to docker-compose file", valueProvider = FileInputProvider.class) final File dockerComposeFilePath) {
+        final File dockerComposeFile = new File(".", dockerComposeFilePath.getPath());
         validateFile(dockerComposeFile);
         dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
     }
