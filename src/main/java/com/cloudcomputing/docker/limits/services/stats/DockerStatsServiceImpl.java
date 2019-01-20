@@ -1,5 +1,6 @@
 package com.cloudcomputing.docker.limits.services.stats;
 
+import com.cloudcomputing.docker.limits.model.stats.Stats;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Statistics;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -31,6 +33,7 @@ class DockerStatsServiceImpl implements DockerStatsService {
         try {
             final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
+            statsCallback.close();
             final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No Stats received"));
             final String memory = String.valueOf(latestStats.getMemoryStats().getLimit());
 
@@ -43,6 +46,8 @@ class DockerStatsServiceImpl implements DockerStatsService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error("Failed to read stats", e);
+        } catch (IOException e) {
+            logger.error("Failed to close callback", e);
         }
 
         return null;

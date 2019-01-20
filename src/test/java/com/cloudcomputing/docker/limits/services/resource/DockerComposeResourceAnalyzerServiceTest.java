@@ -2,13 +2,15 @@ package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
 import com.cloudcomputing.docker.limits.model.io.ServiceSpec;
-import com.cloudcomputing.docker.limits.services.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.Stats;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.cloudcomputing.docker.limits.services.resource.DockerComposeResourceAnalyzerServiceImpl.COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE;
@@ -17,8 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @RunWith(SpringRunner.class)
+@SpringBootTest(properties = {
+        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
+        ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
+})
 public class DockerComposeResourceAnalyzerServiceTest {
 
     @Mock
@@ -31,10 +36,10 @@ public class DockerComposeResourceAnalyzerServiceTest {
     public void sumResources() {
         final ServiceSpec nginx = new ServiceSpec();
         nginx.mem_limit = "10G";
-        nginx.cpu_percent = 20;
+        nginx.cpu_shares = 20;
         final ServiceSpec busybox = new ServiceSpec();
         busybox.mem_limit = "6G";
-        busybox.cpu_percent = 60;
+        busybox.cpu_shares = 60;
         final ImmutableMap<String, ServiceSpec> services = ImmutableMap.<String, ServiceSpec>builder().put("nginx", nginx)
                                                                                                       .put("busybox", busybox)
                                                                                                       .build();
@@ -42,8 +47,8 @@ public class DockerComposeResourceAnalyzerServiceTest {
 
         final Stats stats = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
 
-        assertThat(stats.mem_limit).isEqualTo(gigabyte(16));
-        assertThat(stats.cpu_percent).isEqualTo(80);
+        assertThat(stats.getMem_limit()).isEqualTo(gigabyte(16));
+        assertThat(stats.getCpu_shares()).isEqualTo(80);
     }
 
     @Test

@@ -25,25 +25,25 @@ public class ConfigJson {
     }
 
     //@JsonProperty("mem_limit")
-    private int mem_limit = 10;
+    private String mem_limit;
 
-    //@JsonProperty("cpu_percent")
-    private Double cpu_percent = 2.5;
+    //@JsonProperty("cpu_shares")
+    private int cpu_percent;
 
 
-    public Double getCpu_percent() {
+    public int getCpu_percent() {
         return cpu_percent;
     }
 
-    public void setCpu_percent(Double cpu_percent) {
+    public void setCpu_percent(int cpu_percent) {
         this.cpu_percent = cpu_percent;
     }
 
-    public int getMem_limit() {
+    public String getMem_limit() {
         return mem_limit;
     }
 
-    public void setMem_limit(int mem_limit) {
+    public void setMem_limit(String mem_limit) {
         this.mem_limit = mem_limit;
     }
 

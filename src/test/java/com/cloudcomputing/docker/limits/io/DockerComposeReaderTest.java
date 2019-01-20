@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.shell.jline.InteractiveShellApplicationRunner;
+import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
@@ -14,8 +16,11 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
 @RunWith(SpringRunner.class)
+@SpringBootTest(properties = {
+        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
+        ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
+})
 public class DockerComposeReaderTest {
 
     @Autowired
@@ -38,6 +43,6 @@ public class DockerComposeReaderTest {
         assertThat(dockerCompose.getServices()).containsKey("web");
         final ServiceSpec serviceWeb = Objects.requireNonNull(dockerCompose.getServices()).get("web");
         assertThat(serviceWeb.mem_limit).isEqualTo("50M");
-        assertThat(serviceWeb.cpu_percent).isEqualTo(50);
+        assertThat(serviceWeb.cpu_shares).isEqualTo(50);
     }
 }

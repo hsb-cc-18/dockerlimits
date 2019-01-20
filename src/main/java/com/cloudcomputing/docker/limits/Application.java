@@ -1,7 +1,5 @@
 package com.cloudcomputing.docker.limits;
 
-import com.cloudcomputing.docker.limits.api.DockerComposeFacade;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
@@ -13,9 +11,6 @@ import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfig
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 
-import javax.annotation.Nonnull;
-import java.io.File;
-
 @SpringBootApplication(exclude = {
         DispatcherServletAutoConfiguration.class,
         ErrorMvcAutoConfiguration.class,
@@ -26,31 +21,10 @@ import java.io.File;
         ThymeleafAutoConfiguration.class,
         WebMvcAutoConfiguration.class,
 })
-public class Application implements CommandLineRunner {
-
-    private final File dockerComposeFile = new File(getClass().getResource("io/docker-compose-with-username-and-service-labeled.yml").getFile());
-
-    private DockerComposeFacade dockerComposeFacade;
-
-    public Application(@Nonnull DockerComposeFacade dockerComposeFacade) {
-        this.dockerComposeFacade = dockerComposeFacade;
-
-    }
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        System.exit(SpringApplication.exit(SpringApplication.run(Application.class, args)));
     }
 
-    /**
-     * Callback used to run the bean.
-     *
-     * @param args incoming main method arguments
-     * @throws Exception on error
-     */
-    @Override
-    public void run(String... args) throws Exception {
-        if (args.length > 0 && args[0].equals("run")) {
-            dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
-        }
-    }
 }

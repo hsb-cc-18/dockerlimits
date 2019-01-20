@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-class SingleStatCallback extends StatsCallback {
+public class SingleStatCallback extends StatsCallback {
 
     public SingleStatCallback() {
         // Get at least two values, so "pre" attributes in data-structure are populated
