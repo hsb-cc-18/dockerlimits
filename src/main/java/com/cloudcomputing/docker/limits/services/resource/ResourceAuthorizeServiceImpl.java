@@ -34,24 +34,24 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
 
         final Stats usedResources = resourceUsageService.sumResourceUsage(dockerCompose.getHsbUsername());
         final Stats requestedResources = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
-        final Stats wouldAllocReources = usedResources.add(requestedResources);
+        final Stats wouldAllocResources = usedResources.add(requestedResources);
 
-        if(mem_limitFits(wouldAllocReources) && cpu_sharesFits(wouldAllocReources)) {
+        if(mem_limitFits(wouldAllocResources) && cpu_sharesFits(wouldAllocResources)) {
             isAuthorized = true;
         } else {
             isAuthorized = false;
-            logger.debug("Request exceeds limit");
+            logger.debug("Request exceeds limit: requested resources {} does not fit.", requestedResources);
         }
 
         return isAuthorized;
     }
 
-    private boolean cpu_sharesFits(Stats wouldAllocReources) {
-        return cpu_shares_role - wouldAllocReources.getCpu_shares() > 0;
+    private boolean cpu_sharesFits(Stats wouldAllocResources) {
+        return cpu_shares_role - wouldAllocResources.getCpu_shares() > 0;
     }
 
-    private boolean mem_limitFits(Stats wouldAllocReources) {
-        return mem_limit_role.subtract(wouldAllocReources.getMem_limit()).longValue() > 0;
+    private boolean mem_limitFits(Stats wouldAllocResources) {
+        return mem_limit_role.subtract(wouldAllocResources.getMem_limit()).longValue() > 0;
     }
 
 }

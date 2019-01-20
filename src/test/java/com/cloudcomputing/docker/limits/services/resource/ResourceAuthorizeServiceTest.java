@@ -56,7 +56,7 @@ public class ResourceAuthorizeServiceTest {
     }
 
     @Test
-    public void returnsFalseIfNotEnoughCpu() {
+    public void returnsFalseIfNotEnoughCpuShares() {
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 50));
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 100));
 
