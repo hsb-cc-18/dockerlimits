@@ -12,7 +12,6 @@ import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +37,7 @@ public class SingleStatCallbackTest extends ContainerIT {
     }
 
     @Test
-    public void getLatestStatsWithTimeout() throws InterruptedException, IOException {
+    public void getLatestStatsWithTimeout() throws InterruptedException {
         final Optional<Statistics> latestStatsWithTimeout = singleStatCallback.getLatestStatsWithTimeout(3);
         Boolean gotStats = singleStatCallback.gotStats();
 
@@ -47,7 +46,7 @@ public class SingleStatCallbackTest extends ContainerIT {
     }
 
     @Test
-    public void getNoLatestStatsWithTimeout() throws InterruptedException, IOException {
+    public void getNoLatestStatsWithTimeout() throws InterruptedException {
         final Optional<Statistics> latestStatsWithTimeout = singleStatCallback.getLatestStatsWithTimeout(0);
         Boolean gotStats = singleStatCallback.gotStats();
 
