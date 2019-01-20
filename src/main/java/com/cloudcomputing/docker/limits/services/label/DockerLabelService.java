@@ -7,6 +7,9 @@ public interface DockerLabelService {
     /** key used of the label that contains owners username */
     String LABEL_USER_KEY = "hsb.username";
 
+    static String buildLabel(String username) {
+        return String.format("%s=%s", LABEL_USER_KEY, username);
+    }
     /**
      * Get the username of a container by containerId
      * @param containerId to query

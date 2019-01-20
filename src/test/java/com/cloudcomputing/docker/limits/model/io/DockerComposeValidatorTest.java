@@ -54,25 +54,25 @@ public class DockerComposeValidatorTest {
     @Test
     public void testLabeledService() {
         final ServiceSpec nginx = new ServiceSpec();
-        nginx.labels = ImmutableList.of(DockerLabelService.LABEL_USER_KEY + "=" +  UserRoleService.STUDENT);
+        nginx.labels = ImmutableList.of(DockerLabelService.buildLabel(UserRoleService.STUDENT));
         final ImmutableMap<String, ServiceSpec> services = ImmutableMap.<String, ServiceSpec>builder().put("nginx", nginx).build();
 
         when(dockerCompose.getVersion()).thenReturn("2.4");
         when(dockerCompose.getHsbUsername()).thenReturn("czoeller");
 
-        // Test with label
+        // Test with labels
         when(dockerCompose.getServices()).thenReturn(services);
 
         Set<ConstraintViolation<DockerCompose>> violations = dockerComposeValidator.validate(dockerCompose);
         ConstraintViolationSetAssert.assertThat(violations).hasNoViolations();
 
-        // Test without label
+        // Test with empty labels
         services.get("nginx").labels = ImmutableList.<String>builder().build();
         when(dockerCompose.getServices()).thenReturn(services);
         violations = dockerComposeValidator.validate(dockerCompose);
         ConstraintViolationSetAssert.assertThat(violations).hasViolationOnPath("services[nginx].labels");
 
-        // Test null label
+        // Test null labels
         services.get("nginx").labels = null;
         when(dockerCompose.getServices()).thenReturn(services);
         violations = dockerComposeValidator.validate(dockerCompose);
