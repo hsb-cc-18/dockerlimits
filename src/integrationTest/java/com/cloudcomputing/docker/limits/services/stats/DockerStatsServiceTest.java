@@ -1,6 +1,6 @@
 package com.cloudcomputing.docker.limits.services.stats;
 
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.cloudcomputing.docker.limits.services.util.ContainerIT;
 import com.github.dockerjava.api.DockerClient;
 import org.junit.Before;
@@ -42,14 +42,14 @@ public class DockerStatsServiceTest extends ContainerIT {
 
     @Test
     public void getStats() {
-        final Stats stats = dockerStatsService.getStats(getContainerId());
-        assertThat(stats.getMem_limit().longValue()).isCloseTo(100000000L, withPercentage(1));
+        final ResourceDescriptor resourceDescriptor = dockerStatsService.getStats(getContainerId());
+        assertThat(resourceDescriptor.getMem_limit().longValue()).isCloseTo(100000000L, withPercentage(1));
     }
 
     @Test
     public void getConfig() {
-        final Stats stats = dockerStatsService.getConfig(getContainerId());
-        assertThat(stats.getMem_limit().longValue()).isEqualTo(100000000L);
+        final ResourceDescriptor resourceDescriptor = dockerStatsService.getConfig(getContainerId());
+        assertThat(resourceDescriptor.getMem_limit().longValue()).isEqualTo(100000000L);
     }
 
 }
