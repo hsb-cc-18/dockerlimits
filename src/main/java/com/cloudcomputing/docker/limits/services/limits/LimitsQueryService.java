@@ -1,7 +1,7 @@
 package com.cloudcomputing.docker.limits.services.limits;
 
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 
 public interface LimitsQueryService {
-    Stats getLimitsForUsername(String username);
+    ResourceDescriptor getLimitsForUsername(String username);
 }

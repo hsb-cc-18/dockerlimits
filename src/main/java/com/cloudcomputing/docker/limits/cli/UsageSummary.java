@@ -1,6 +1,6 @@
 package com.cloudcomputing.docker.limits.cli;
 
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.cloudcomputing.docker.limits.model.userrole.Role;
 import com.cloudcomputing.docker.limits.services.limits.LimitsQueryService;
 import com.cloudcomputing.docker.limits.services.resource.ResourceUsageService;
@@ -28,9 +28,9 @@ public class UsageSummary {
     public void usage( @ShellOption(help = "the username") final String username) {
         final Role role = userRoleService.getRoleForUsername(username);
         System.out.printf("User '%s' has role '%s'%n", username, role.name());
-        final Stats resourceLimits = limitsQueryService.getLimitsForUsername(username);
+        final ResourceDescriptor resourceLimits = limitsQueryService.getLimitsForUsername(username);
         System.out.printf("The resource limits are: %s%n", resourceLimits);
-        final Stats resourceUsage = resourceUsageService.sumResourceUsage(username);
+        final ResourceDescriptor resourceUsage = resourceUsageService.sumResourceUsage(username);
         System.out.printf("Resource usage for user '%s': %s%n", username, resourceUsage);
 
     }

@@ -1,7 +1,7 @@
 package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.cloudcomputing.docker.limits.services.limits.LimitsQueryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,9 +42,9 @@ public class ResourceAuthorizeServiceTest {
     @Test
     public void returnsTrueIfEnoughResources() {
 
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new Stats("1G", 20));
-        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("500M", 10));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("200M", 9));
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("500M", 10, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("200M", 9, 100));
 
         final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
         assertThat(check).isTrue();
@@ -52,9 +52,9 @@ public class ResourceAuthorizeServiceTest {
 
     @Test
     public void returnsFalseIfNotEnoughMemory() {
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new Stats("1G", 20));
-        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 10));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("9G", 10));
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("9G", 10, 100));
 
         final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
 
@@ -63,9 +63,20 @@ public class ResourceAuthorizeServiceTest {
 
     @Test
     public void returnsFalseIfNotEnoughCpuShares() {
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new Stats("1G", 20));
-        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new Stats("1G", 10));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new Stats("2G", 100));
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 100));
+
+        final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
+
+        assertThat(check).isFalse();
+    }
+
+    @Test
+    public void returnsFalseIfNotEnoughBlkioWeight() {
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 400));
 
         final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
 

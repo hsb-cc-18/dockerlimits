@@ -9,3 +9,6 @@ services:
     labels:
       - "hsb.username=czoeller"
     mem_limit: 50M
+    cpu_shares: 5
+    blkio_config:
+      weight: 300

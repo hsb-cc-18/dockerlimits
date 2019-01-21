@@ -28,6 +28,9 @@ public class ServiceSpec {
     public ImmutableList<String> labels;
 
     @Nullable
+    public BlkioConfigSpec blkio_config;
+
+    @Nullable
     public Double cpus;
 
     @Nullable

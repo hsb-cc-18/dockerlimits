@@ -17,8 +17,9 @@ public class ContainerDetails {
     private final Long cpu_percent;
     private final Long memory_usage;
     private final Long memory_limit;
+    private final int blkio_weight_limit;
 
-    public ContainerDetails(String id, String name, String created, String image, Long cpu_percent, Long memory_usage, Long memory_limit) {
+    public ContainerDetails(String id, String name, String created, String image, Long cpu_percent, Long memory_usage, Long memory_limit, int blkio_weight_limit) {
         this.id = id;
         this.name = name;
         this.created = created;
@@ -26,6 +27,7 @@ public class ContainerDetails {
         this.cpu_percent = cpu_percent;
         this.memory_usage = memory_usage;
         this.memory_limit = memory_limit;
+        this.blkio_weight_limit = blkio_weight_limit;
     }
 
     public String getId() {
@@ -57,6 +59,10 @@ public class ContainerDetails {
 
     public Double getMemory_usage_percent() {
         return memory_usage / ((double) memory_limit) * 100;
+    }
+
+    public int getBlkio_weight_limit() {
+        return blkio_weight_limit;
     }
 
     @Override
