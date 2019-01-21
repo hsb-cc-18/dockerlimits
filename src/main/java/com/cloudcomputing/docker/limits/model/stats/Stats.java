@@ -3,6 +3,7 @@ package com.cloudcomputing.docker.limits.model.stats;
 
 import de.xn__ho_hia.storage_unit.Megabyte;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -64,6 +65,6 @@ public class Stats {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }
