@@ -29,9 +29,9 @@ public class ResourceDescriptor {
     }
 
     public ResourceDescriptor add(@Nonnull ResourceDescriptor other) {
-        int cpu_percent = this.cpu_shares + other.cpu_shares;
+        int cpu_shares = this.cpu_shares + other.cpu_shares;
         int blkio_weight = this.blkio_weight + other.blkio_weight;
-        return new ResourceDescriptor(this.mem_limit.add(other.mem_limit).toString(), cpu_percent, blkio_weight);
+        return new ResourceDescriptor(this.mem_limit.add(other.mem_limit).toString(), cpu_shares, blkio_weight);
     }
 
     public Megabyte getMem_limit() {

@@ -40,7 +40,7 @@ public class ResourceUsageServiceImplTest {
     public void testSummarizesResources() {
         List<String> containerIds = Lists.newArrayList("28281c", "asdas2");
         when(dockerLabelService.getContainers("czoeller")).thenReturn(containerIds);
-        when(dockerStatsService.getStats(any())).thenReturn(new ResourceDescriptor("2M", 30, 200))
+        when(dockerStatsService.getConfig(any())).thenReturn(new ResourceDescriptor("2M", 30, 200))
                                                 .thenReturn(new ResourceDescriptor("8M", 50, 100))
                                                 .thenThrow(new IllegalStateException("No more data"));
 
