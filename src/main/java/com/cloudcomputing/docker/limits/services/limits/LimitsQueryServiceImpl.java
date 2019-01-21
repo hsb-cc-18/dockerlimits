@@ -24,6 +24,6 @@ public class LimitsQueryServiceImpl implements LimitsQueryService {
     @Override
     public Stats getLimitsForUsername(String username) {
         final Role roleOfUser = userRoleService.getRoleForUsername(username);
-        return new Stats(config.getMem_limit(roleOfUser.name()), config.getCpu_shares(roleOfUser.name()));
+        return new ResourceDescriptor(config.getMem_limit(roleOfUser.name()), config.getCpu_shares(roleOfUser.name()), config.getBlkio_weight(roleOfUser.name()));
     }
 }

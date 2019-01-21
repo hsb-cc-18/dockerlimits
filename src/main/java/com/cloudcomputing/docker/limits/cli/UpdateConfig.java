@@ -19,20 +19,20 @@ public class UpdateConfig {
     @ShellMethod(key = "update-config", value = "Update config for a role like memory-limit, cpu-share etc.")
     public void update(final String role,
                        @ShellOption(defaultValue = ShellOption.NULL) final String memoryLimit,
-                       @ShellOption(defaultValue = ShellOption.NULL) final String cpuPercentage,
-                       @ShellOption(defaultValue = ShellOption.NULL) final String blk_weight){
-        if(null!=memoryLimit){
-            config.setMem_limit(role,memoryLimit);
+                       @ShellOption(defaultValue = ShellOption.NULL) final Integer cpuShares,
+                       @ShellOption(defaultValue = ShellOption.NULL) final Integer blkio_weight){
+        if (null != memoryLimit) {
+            config.setMem_limit(role, memoryLimit);
         }
-        if(null!=cpuPercentage){
-            config.setMem_limit(role,cpuPercentage);
+        if (null != cpuShares) {
+            config.setCpu_shares(role, cpuShares);
         }
-        if(null!=blk_weight){
-            config.setBlk_weight(role,Integer.parseInt(blk_weight));
+        if (null != blkio_weight) {
+            config.setBlkio_weight(role, blkio_weight);
         }
         try {
             config.save();
-            String message = String.format("New Config saved for role '%s': Memory Limit: %s, CPU Percentage: %d, Blk Weight: %d%n", role, config.getMem_limit(role), config.getCpu_shares(role), config.getBlk_weight(role));
+            String message = String.format("New Config saved for role '%s': Memory Limit: %s, CPU Percentage: %d, Blkio Weight: %d%n", role, config.getMem_limit(role), config.getCpu_shares(role), config.getBlkio_weight(role));
             System.out.print(message);
             logger.info(message);
         } catch (IOException e) {

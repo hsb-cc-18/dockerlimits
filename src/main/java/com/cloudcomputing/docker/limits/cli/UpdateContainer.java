@@ -21,14 +21,14 @@ public class UpdateContainer {
     @ShellMethod(key = "update-container", value = "Update limits of a container")
     public void update(
             final String containerId,
-            @ShellOption(defaultValue = ShellOption.NULL) final String cpuShares,     // default is 1024
+            @ShellOption(defaultValue = ShellOption.NULL) final Integer cpuShares,     // default is 1024
             @ShellOption(defaultValue = ShellOption.NULL) final String memoryLimit,
-            @ShellOption(defaultValue = ShellOption.NULL) final String blkIoWeight) { //default is 500
+            @ShellOption(defaultValue = ShellOption.NULL) final Integer blkIoWeight) { //default is 500
 
         UpdateContainerCmd updateContainerCmd = dockerClient.updateContainerCmd(containerId);
 
         if(cpuShares != null) {
-            updateContainerCmd = updateContainerCmd.withCpuShares(Integer.parseInt(cpuShares));
+            updateContainerCmd = updateContainerCmd.withCpuShares(cpuShares);
         }
         if(memoryLimit != null){
             final long bytes = Stats.toBytes(memoryLimit);
@@ -36,7 +36,7 @@ public class UpdateContainer {
             updateContainerCmd = updateContainerCmd.withMemorySwap(bytes + 100);
         }
         if(blkIoWeight != null){
-            updateContainerCmd = updateContainerCmd.withBlkioWeight(Integer.parseInt(blkIoWeight));
+            updateContainerCmd = updateContainerCmd.withBlkioWeight(blkIoWeight);
         }
 
         updateContainerCmd.exec();
