@@ -26,6 +26,13 @@ public interface Config {
     public int getCpu_shares(String role);
 
     /**
+     * gets blk weight for specifeid role
+     * @param role
+     * @return
+     */
+    public int getBlk_weight(String role);
+
+    /**
      * sets memory limit for specified role
      * @param role
      * @param mem_limit
@@ -38,6 +45,13 @@ public interface Config {
      * @param cpu_shares
      */
     public void setCpu_shares(String role, int cpu_shares);
+
+    /**
+     * sets blk_weight for specified role
+     * @param role
+     * @param blk_weight
+     */
+    public void setBlk_weight(String role, int blk_weight);
 
 
 }

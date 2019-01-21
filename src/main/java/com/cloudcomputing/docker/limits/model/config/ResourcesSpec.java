@@ -14,4 +14,5 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 public class ResourcesSpec {
     public String mem_limit;
     public int cpu_shares;
+    public int blk_weight;
 }

@@ -20,17 +20,21 @@ public class UpdateConfig {
     @ShellMethod(key = "update-config", value = "Update config for a role like memory-limit, cpu-share etc.")
     public void update(final String role,
                        @ShellOption(defaultValue = ShellOption.NULL) final String memoryLimit,
-                       @ShellOption(defaultValue = ShellOption.NULL) final String cpuPercentage){
+                       @ShellOption(defaultValue = ShellOption.NULL) final String cpuPercentage,
+                       @ShellOption(defaultValue = ShellOption.NULL) final String blk_weight){
         if(null!=memoryLimit){
             config.setMem_limit(role,memoryLimit);
         }
         if(null!=cpuPercentage){
             config.setMem_limit(role,cpuPercentage);
         }
+        if(null!=cpuPercentage){
+            config.setBlk_weight(role,Integer.parseInt(blk_weight));
+        }
         try {
             config.save();
-            System.out.println("New Config saved for \""+role+"\": Memory Limit: " + config.getMem_limit(role) + "CPU Percentage: " + config.getCpu_shares(role));
-            logger.info("Saved config: \""+role+"\": mem = " + config.getMem_limit(role) + ", CPU % = " + config.getCpu_shares(role));
+            System.out.println("New Config saved for \""+role+"\": Memory Limit: " + config.getMem_limit(role) + "CPU Percentage: " + config.getCpu_shares(role) + "Blk Weight: " + config.getBlk_weight(role));
+            logger.info("Saved config: \""+role+"\": mem = " + config.getMem_limit(role) + ", CPU % = " + config.getCpu_shares(role) + ", Blk Weight = " + config.getBlk_weight(role));
         } catch (IOException e) {
             logger.error("Could not save config: ", e);
             System.out.println("Could not save config");

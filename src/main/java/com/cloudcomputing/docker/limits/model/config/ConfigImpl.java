@@ -71,6 +71,18 @@ public class ConfigImpl implements Config{
     }
 
     /**
+     * gets blk weight for specifeid role
+     * @param role role of user (student etc.)
+     * @return relative blk weight
+     */
+    public int getBlk_weight(String role){
+        if (this.config.getResourceLimits().containsKey(role))
+            return this.config.getResourceLimits().get(role).blk_weight;
+        else
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
+    }
+
+    /**
      * sets memory limit for specified role
      * @param role role of user (student etc.)
      * @param mem_limit maximum allowabale memory usage for role
@@ -95,6 +107,22 @@ public class ConfigImpl implements Config{
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
         {
             this.config.getResourceLimits().get(role).cpu_shares = cpu_shares;// increment the value by 1 to an already existing key
+        }
+        else
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
+    }
+
+    /**
+     * sets blk weight for specified role
+     * @param role role of user (student etc.)
+     * @param blk_weight relative blk weight
+     */
+    public void setBlk_weight(String role, int blk_weight) {
+        if(blk_weight<10 || blk_weight>1000)
+            throw new IllegalArgumentException("Blk weight must be between 10 and 1000!");
+        if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
+        {
+            this.config.getResourceLimits().get(role).blk_weight = blk_weight;// increment the value by 1 to an already existing key
         }
         else
             throw new IllegalArgumentException("Role \"" + role + "\" is not existing");

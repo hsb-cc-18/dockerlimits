@@ -30,6 +30,9 @@ public class ConfigJson {
     //@JsonProperty("cpu_shares")
     private int cpu_percent;
 
+    //@JsonProperty("blk_weight")
+    private int blk_weight;
+
 
     public int getCpu_percent() {
         return cpu_percent;
@@ -37,6 +40,14 @@ public class ConfigJson {
 
     public void setCpu_percent(int cpu_percent) {
         this.cpu_percent = cpu_percent;
+    }
+
+    public int getBlk_weight() {
+        return blk_weight;
+    }
+
+    public void setBlk_weight(int blk_weight) {
+        this.blk_weight = blk_weight;
     }
 
     public String getMem_limit() {
