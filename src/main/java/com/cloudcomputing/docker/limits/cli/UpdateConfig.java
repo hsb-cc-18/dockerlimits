@@ -1,7 +1,6 @@
 package com.cloudcomputing.docker.limits.cli;
 
 import com.cloudcomputing.docker.limits.model.config.Config;
-import com.cloudcomputing.docker.limits.model.config.ConfigImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class UpdateConfig {
         if(null!=cpuPercentage){
             config.setMem_limit(role,cpuPercentage);
         }
-        if(null!=cpuPercentage){
+        if(null!=blk_weight){
             config.setBlk_weight(role,Integer.parseInt(blk_weight));
         }
         try {
