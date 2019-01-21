@@ -2,9 +2,12 @@ resourceLimits:
   HSB_STUDENT:
     mem_limit: "1G"
     cpu_shares: 20
+    blkio_weight: 500
   HSB_MEMBER:
     mem_limit: "2G"
     cpu_shares: 20
+    blkio_weight: 500
   HSB_PROF:
     mem_limit: "1G"
     cpu_shares: 20
+    blkio_weight: 500

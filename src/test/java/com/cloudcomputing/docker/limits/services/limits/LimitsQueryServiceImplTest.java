@@ -28,13 +28,19 @@ public class LimitsQueryServiceImplTest {
     }
 
     @Test
-    public void getCouSharesLimitFromUsername() {
+    public void getCpuSharesLimitFromUsername() {
         assertThat(limitsQueryService.getLimitsForUsername(UserRoleService.STUDENT).getCpu_shares()).isEqualTo(20);
+    }
+
+    @Test
+    public void getBlkioWeightLimitFromUsername() {
+        assertThat(limitsQueryService.getLimitsForUsername(UserRoleService.STUDENT).getBlkio_weight()).isEqualTo(500);
     }
 
     @Test
     public void testDefaultLimits() {
         assertThat(limitsQueryService.getLimitsForUsername("unknown").getMem_limit()).isEqualTo(gigabyte(1));
         assertThat(limitsQueryService.getLimitsForUsername("unknown").getCpu_shares()).isEqualTo(20);
+        assertThat(limitsQueryService.getLimitsForUsername("unknown").getBlkio_weight()).isEqualTo(500);
     }
 }

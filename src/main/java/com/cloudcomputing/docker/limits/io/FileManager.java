@@ -21,9 +21,10 @@ import java.nio.file.Paths;
 public class FileManager {
 
     private static final Logger logger = LoggerFactory.getLogger(FileManager.class);
-    public static final Path userAppDirectory = Paths.get(System.getProperty("user.home") + "/dockerlimits");
-    public static final Path userConfigFilePath = Paths.get(userAppDirectory + "/config.yml");
-    public static final String configFileOriginName ="/config.yml";
+    public static final String CONFIG_FILE_ORIGIN_NAME = "config.yml";
+    public static final String CONFIG_FILE_ORIGIN_LOCATION = "/" + CONFIG_FILE_ORIGIN_NAME;
+    public static final Path userAppDirectory = Paths.get(System.getProperty("user.home") + File.separator + "dockerlimits");
+    public static final Path userConfigFilePath = Paths.get(userAppDirectory + CONFIG_FILE_ORIGIN_LOCATION);
 
     @Autowired
     public FileManager() {}
@@ -54,7 +55,7 @@ public class FileManager {
     private void createFile() throws IOException {
         logger.debug("Create File");
         try {
-            Files.copy(getClass().getResourceAsStream(configFileOriginName), userConfigFilePath);
+            Files.copy(getClass().getResourceAsStream(CONFIG_FILE_ORIGIN_LOCATION), userConfigFilePath);
         } catch (IOException e) {
             throw new IOException("Could not create config File: " + userConfigFilePath.toString(), e);
         }

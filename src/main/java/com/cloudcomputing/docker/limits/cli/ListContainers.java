@@ -3,14 +3,13 @@ package com.cloudcomputing.docker.limits.cli;
 import com.cloudcomputing.docker.limits.model.details.ContainerDetails;
 import com.cloudcomputing.docker.limits.services.details.ContainerDetailsService;
 import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
-import com.google.common.collect.ImmutableList;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class ListContainers {
     }
 
     @ShellMethod(key = "list-containers", value = "List all containers by username")
-    public void list(String username) {
+    public void list(@ShellOption(help = "the username") String username) {
         final List<Map<String,String>> details = dockerLabelService.getContainers(username)
                                                                    .parallelStream()
                                                                    .map(containerDetailsService::getContainerDetails)
@@ -46,7 +45,6 @@ public class ListContainers {
             at.addRule();
             System.out.println(at.render());
         }
-
     }
 
 }

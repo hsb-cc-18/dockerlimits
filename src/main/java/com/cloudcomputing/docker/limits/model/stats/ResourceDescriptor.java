@@ -3,6 +3,7 @@ package com.cloudcomputing.docker.limits.model.stats;
 
 import de.xn__ho_hia.storage_unit.Megabyte;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -11,19 +12,26 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Stats {
+public class ResourceDescriptor {
 
-    private Integer cpu_shares;
     private Megabyte mem_limit;
+    private Integer cpu_shares;
+    private Integer blkio_weight;
 
-    public Stats(String mem_limit, Integer cpu_shares) {
+    public ResourceDescriptor(String mem_limit, Integer cpu_shares, Integer blkio_weight) {
         this.mem_limit = Megabyte.valueOf(toBytes(mem_limit));
         this.cpu_shares = cpu_shares;
+        this.blkio_weight = blkio_weight;
     }
 
-    public Stats add(@Nonnull Stats stats) {
-        int cpu_percent = this.cpu_shares + stats.cpu_shares;
-        return new Stats(this.mem_limit.add(stats.mem_limit).toString(), cpu_percent);
+    public static ResourceDescriptor initial() {
+        return new ResourceDescriptor("0M", 0, 0);
+    }
+
+    public ResourceDescriptor add(@Nonnull ResourceDescriptor other) {
+        int cpu_shares = this.cpu_shares + other.cpu_shares;
+        int blkio_weight = this.blkio_weight + other.blkio_weight;
+        return new ResourceDescriptor(this.mem_limit.add(other.mem_limit).toString(), cpu_shares, blkio_weight);
     }
 
     public Megabyte getMem_limit() {
@@ -32,6 +40,10 @@ public class Stats {
 
     public Integer getCpu_shares() {
         return cpu_shares;
+    }
+
+    public Integer getBlkio_weight() {
+        return blkio_weight;
     }
 
     // https://stackoverflow.com/questions/12090598/parsing-human-readable-filesizes-in-java-to-bytes
@@ -64,6 +76,6 @@ public class Stats {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
     }
 }

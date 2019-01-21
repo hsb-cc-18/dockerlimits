@@ -1,7 +1,7 @@
 package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import de.xn__ho_hia.storage_unit.Megabyte;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +13,14 @@ public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeRe
     public static final String COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE = "Could not sum mem of docker compose.";
 
     @Override
-    public Stats sumResources(DockerCompose dockerCompose) {
+    public ResourceDescriptor sumResources(DockerCompose dockerCompose) {
 
 
         final Optional<Megabyte> mem_limit_requestOpt = dockerCompose.getServices().values()
                                                                      .stream()
                                                                      .filter(s -> s.mem_limit != null && !s.mem_limit.trim().isEmpty())
                                                                      .map(s -> s.mem_limit)
-                                                                     .map(Stats::toBytes)
+                                                                     .map(ResourceDescriptor::toBytes)
                                                                      .map(Megabyte::valueOf)
                                                                      .reduce(Megabyte::add);
 
@@ -32,10 +32,18 @@ public class DockerComposeResourceAnalyzerServiceImpl implements DockerComposeRe
                                      .mapToInt(Integer::intValue)
                                      .sum();
 
+        int blkio_weight_requested = dockerCompose.getServices()
+                                     .values()
+                                     .stream()
+                                     .filter(s -> s.blkio_config != null && s.blkio_config.weight >= 0)
+                                     .map(s -> s.blkio_config.weight)
+                                     .mapToInt(Integer::intValue)
+                                     .sum();
+
         if(!mem_limit_requestOpt.isPresent()) {
             throw new IllegalStateException(COULD_NOT_SUM_MEM_OF_DOCKER_COMPOSE);
         }
 
-        return new Stats(mem_limit_requestOpt.get().toString(), cpushares_requested);
+        return new ResourceDescriptor(mem_limit_requestOpt.get().toString(), cpushares_requested, blkio_weight_requested);
     }
 }

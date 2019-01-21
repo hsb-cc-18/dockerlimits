@@ -32,7 +32,7 @@ public class ContainerDetailsServiceImpl implements ContainerDetailsService {
             final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
             statsCallback.close();
-            final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No Stats received"));
+            final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No ResourceDescriptor received"));
             final InspectContainerResponse inspect = dockerClient.inspectContainerCmd(containerId).exec();
             return buildContainerDetails(latestStats, inspect);
         } catch (InterruptedException | IOException e) {
@@ -46,6 +46,7 @@ public class ContainerDetailsServiceImpl implements ContainerDetailsService {
         final String name = inspect.getName();
         final String created = inspect.getCreated();
         final String image = dockerClient.inspectImageCmd(inspect.getImageId()).exec().getConfig().getImage();
+        final int blkio_weight_limit = inspect.getHostConfig().getBlkioWeight();
 
         final long cpuDelta = statistics.getCpuStats().getCpuUsage().getTotalUsage() - statistics.getPreCpuStats().getCpuUsage().getTotalUsage();
         final long systemDelta = statistics.getCpuStats().getSystemCpuUsage() - statistics.getPreCpuStats().getSystemCpuUsage();
@@ -54,7 +55,7 @@ public class ContainerDetailsServiceImpl implements ContainerDetailsService {
         final Long memory_usage = statistics.getMemoryStats().getUsage();
         final Long memory_limit = statistics.getMemoryStats().getLimit();
 
-        return new ContainerDetails(id, name, created, image, cpu_percent, memory_usage, memory_limit);
+        return new ContainerDetails(id, name, created, image, cpu_percent, memory_usage, memory_limit, blkio_weight_limit);
     }
 
 }

@@ -16,7 +16,7 @@ import java.io.IOException;
 @Loggable
 public class ConfigImpl implements Config{
     private final ObjectMapper mapper; // jackson databind
-    private File configFile;// = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
+    private File configFile;
     private ConfigJson config;
     private final FileManager fileManager;
 
@@ -71,6 +71,18 @@ public class ConfigImpl implements Config{
     }
 
     /**
+     * gets blk weight for specifeid role
+     * @param role role of user (student etc.)
+     * @return relative blk weight
+     */
+    public int getBlkio_weight(String role){
+        if (this.config.getResourceLimits().containsKey(role))
+            return this.config.getResourceLimits().get(role).blkio_weight;
+        else
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
+    }
+
+    /**
      * sets memory limit for specified role
      * @param role role of user (student etc.)
      * @param mem_limit maximum allowabale memory usage for role
@@ -95,6 +107,22 @@ public class ConfigImpl implements Config{
         if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
         {
             this.config.getResourceLimits().get(role).cpu_shares = cpu_shares;// increment the value by 1 to an already existing key
+        }
+        else
+            throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
+    }
+
+    /**
+     * sets blk weight for specified role
+     * @param role role of user (student etc.)
+     * @param blkio_weight relative blk weight
+     */
+    public void setBlkio_weight(String role, int blkio_weight) {
+        if(blkio_weight<10 || blkio_weight>1000)
+            throw new IllegalArgumentException("Blkio weight must be between 10 and 1000!");
+        if(this.config.getResourceLimits().containsKey(role)) //will check if a particular key exist or not
+        {
+            this.config.getResourceLimits().get(role).blkio_weight = blkio_weight;// increment the value by 1 to an already existing key
         }
         else
             throw new IllegalArgumentException("Role \"" + role + "\" is not existing");
