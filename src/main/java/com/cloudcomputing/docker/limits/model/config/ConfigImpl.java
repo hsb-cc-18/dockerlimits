@@ -16,7 +16,7 @@ import java.io.IOException;
 @Loggable
 public class ConfigImpl implements Config{
     private final ObjectMapper mapper; // jackson databind
-    private File configFile;// = new File("src/main/java/com/cloudcomputing/docker/limits/model/config/resources.yml");
+    private File configFile;
     private ConfigJson config;
     private final FileManager fileManager;
 

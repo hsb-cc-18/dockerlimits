@@ -32,10 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
         ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
 })
 public class FileManagerTest {
-    static Path userAppDirectory = FileManager.userAppDirectory;
-    static Path userConfigFilePath = FileManager.userConfigFilePath;
-    static String configFileOriginPath = FileManager.configFileOriginName;
-    static File configFileOriginFile =new File(FileManagerTest.class.getResource(configFileOriginPath).getFile());
+    private static final Path userAppDirectory = FileManager.userAppDirectory;
+    private static final Path userConfigFilePath = FileManager.userConfigFilePath;
+    private static final File configFileOriginFile = new File(FileManagerTest.class.getResource(FileManager.CONFIG_FILE_ORIGIN_LOCATION).getFile());
 
     @Autowired
     FileManager fileManager;
@@ -47,7 +46,7 @@ public class FileManagerTest {
     @BeforeClass
     public static void setUpTest() {
         if(userAppDirectory.toFile().exists())
-            keepFolder= true;
+            keepFolder = true;
         if(userConfigFilePath.toFile().exists())
             keepFile = true;
     }
@@ -57,10 +56,10 @@ public class FileManagerTest {
         if(!userAppDirectory.toFile().exists())
             userAppDirectory.toFile().mkdirs();
         if(!userConfigFilePath.toFile().exists())
-            Files.copy(Paths.get(getClass().getResource(configFileOriginPath).toURI()), userConfigFilePath, StandardCopyOption.COPY_ATTRIBUTES);
+            Files.copy(Paths.get(getClass().getResource(FileManager.CONFIG_FILE_ORIGIN_LOCATION).toURI()), userConfigFilePath, StandardCopyOption.COPY_ATTRIBUTES);
     }
     @After
-    public void tearDown() throws IOException {
+    public void tearDown() {
         if(userConfigFilePath.toFile().exists() && !keepFile){
             userConfigFilePath.toFile().delete();
             System.out.println("deleted file");

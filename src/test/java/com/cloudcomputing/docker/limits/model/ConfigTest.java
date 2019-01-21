@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ConfigTest {
 
-
     @Autowired
     Config config;
 
@@ -96,7 +95,7 @@ public class ConfigTest {
         this.config.setMem_limit(role,"0");
         //load config with new values
         this.config.load();
-        //check loaded values euals new values
+        //check loaded values equals new values
         assertThat(this.config.getCpu_shares(role)).isEqualTo(cpu_percent);
         assertThat(this.config.getBlk_weight(role)).isEqualTo(blk_weight);
         assertThat(this.config.getMem_limit(role)).isEqualTo(mem_limit);

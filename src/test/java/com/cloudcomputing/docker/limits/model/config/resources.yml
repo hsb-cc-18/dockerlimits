@@ -1,4 +1,0 @@
-resources:
-      mem_limit: 1024
-      cpu_percent: 20
-      blk_weight: 500
