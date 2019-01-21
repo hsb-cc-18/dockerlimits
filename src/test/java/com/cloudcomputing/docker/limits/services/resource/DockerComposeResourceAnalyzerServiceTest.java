@@ -2,7 +2,7 @@ package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.model.io.DockerCompose;
 import com.cloudcomputing.docker.limits.model.io.ServiceSpec;
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,10 +45,10 @@ public class DockerComposeResourceAnalyzerServiceTest {
                                                                                                       .build();
         when(dockerCompose.getServices()).thenReturn(services);
 
-        final Stats stats = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
+        final ResourceDescriptor resourceDescriptor = dockerComposeResourceAnalyzerService.sumResources(dockerCompose);
 
-        assertThat(stats.getMem_limit()).isEqualTo(gigabyte(16));
-        assertThat(stats.getCpu_shares()).isEqualTo(80);
+        assertThat(resourceDescriptor.getMem_limit()).isEqualTo(gigabyte(16));
+        assertThat(resourceDescriptor.getCpu_shares()).isEqualTo(80);
     }
 
     @Test

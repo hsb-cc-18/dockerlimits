@@ -2,7 +2,7 @@ package com.cloudcomputing.docker.limits.services.resource;
 
 import com.cloudcomputing.docker.limits.services.label.DockerLabelService;
 import com.cloudcomputing.docker.limits.services.stats.DockerStatsService;
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,13 +40,14 @@ public class ResourceUsageServiceImplTest {
     public void testSummarizesResources() {
         List<String> containerIds = Lists.newArrayList("28281c", "asdas2");
         when(dockerLabelService.getContainers("czoeller")).thenReturn(containerIds);
-        when(dockerStatsService.getStats(any())).thenReturn(new Stats("2M", 30))
-                                                .thenReturn(new Stats("8M", 50))
+        when(dockerStatsService.getStats(any())).thenReturn(new ResourceDescriptor("2M", 30, 200))
+                                                .thenReturn(new ResourceDescriptor("8M", 50, 100))
                                                 .thenThrow(new IllegalStateException("No more data"));
 
-        final Stats stats = resourceUsageService.sumResourceUsage("czoeller");
-        assertThat(stats.getMem_limit()).isEqualTo(megabyte(10));
-        assertThat(stats.getCpu_shares()).isEqualTo(80);
+        final ResourceDescriptor resourceDescriptor = resourceUsageService.sumResourceUsage("czoeller");
+        assertThat(resourceDescriptor.getMem_limit()).isEqualTo(megabyte(10));
+        assertThat(resourceDescriptor.getCpu_shares()).isEqualTo(80);
+        assertThat(resourceDescriptor.getBlkio_weight()).isEqualTo(300);
     }
 
 }

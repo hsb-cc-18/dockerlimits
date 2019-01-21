@@ -43,7 +43,7 @@ public class ResourceDescriptor {
     }
 
     public Integer getBlkio_weight() {
-        return cpu_shares;
+        return blkio_weight;
     }
 
     // https://stackoverflow.com/questions/12090598/parsing-human-readable-filesizes-in-java-to-bytes

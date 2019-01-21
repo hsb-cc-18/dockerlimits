@@ -1,6 +1,6 @@
 package com.cloudcomputing.docker.limits.cli;
 
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.UpdateContainerCmd;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class UpdateContainer {
             updateContainerCmd = updateContainerCmd.withCpuShares(cpuShares);
         }
         if(memoryLimit != null){
-            final long bytes = Stats.toBytes(memoryLimit);
+            final long bytes = ResourceDescriptor.toBytes(memoryLimit);
             updateContainerCmd = updateContainerCmd.withMemory(bytes);
             updateContainerCmd = updateContainerCmd.withMemorySwap(bytes + 100);
         }

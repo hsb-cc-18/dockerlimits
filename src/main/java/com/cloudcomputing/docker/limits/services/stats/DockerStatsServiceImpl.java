@@ -1,6 +1,6 @@
 package com.cloudcomputing.docker.limits.services.stats;
 
-import com.cloudcomputing.docker.limits.model.stats.Stats;
+import com.cloudcomputing.docker.limits.model.stats.ResourceDescriptor;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Statistics;
@@ -28,13 +28,13 @@ class DockerStatsServiceImpl implements DockerStatsService {
     }
 
     @Override
-    public Stats getStats(@Nonnull String containerId) {
-        Stats stats = null;
+    public ResourceDescriptor getStats(@Nonnull String containerId) {
+        ResourceDescriptor resourceDescriptor = null;
         try {
             final SingleStatCallback statsCallback = dockerClient.statsCmd(containerId).exec(new SingleStatCallback());
             final Optional<Statistics> latestStatsOptional = statsCallback.getLatestStatsWithTimeout(3);
             statsCallback.close();
-            final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No Stats received"));
+            final Statistics latestStats = latestStatsOptional.orElseThrow(() -> new IllegalStateException("No ResourceDescriptor received"));
             final String memory = String.valueOf(latestStats.getMemoryStats().getLimit());
 
             final long cpuDelta = latestStats.getCpuStats().getCpuUsage().getTotalUsage() - latestStats.getPreCpuStats().getCpuUsage().getTotalUsage();
@@ -42,7 +42,10 @@ class DockerStatsServiceImpl implements DockerStatsService {
             final Integer cpuPercent = Math.toIntExact(cpuDelta / systemDelta * 100);
             logger.debug("Memory limit (stats): {}", memory);
 
-            return new Stats(memory, cpuPercent);
+            //TODO:
+            final int blkio_weight = 0;
+
+            return new ResourceDescriptor(memory, cpuPercent, blkio_weight);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error("Failed to read stats", e);
@@ -54,12 +57,15 @@ class DockerStatsServiceImpl implements DockerStatsService {
     }
 
     @Override
-    public Stats getConfig(@Nonnull String containerId) {
+    public ResourceDescriptor getConfig(@Nonnull String containerId) {
         final InspectContainerResponse exec1 = dockerClient.inspectContainerCmd(containerId).exec();
         final String memory = String.valueOf(exec1.getHostConfig().getMemory());
-        final Integer cpuPercent = Math.toIntExact(exec1.getHostConfig().getCpuPercent());
+        final Integer cpu_shares = Math.toIntExact(exec1.getHostConfig().getCpuShares());
+        final Integer blkio_weight = Math.toIntExact(exec1.getHostConfig().getBlkioWeight());
         logger.debug("Memory limit (inspect): {}", memory);
+        logger.debug("CPU shares limit (inspect): {}", cpu_shares);
+        logger.debug("Blkio Weight limit (inspect): {}", blkio_weight);
 
-        return new Stats(memory, cpuPercent);
+        return new ResourceDescriptor(memory, cpu_shares, blkio_weight);
     }
 }
