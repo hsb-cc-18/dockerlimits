@@ -26,7 +26,7 @@ public class ResourceUsageServiceImpl implements ResourceUsageService {
 
         ResourceDescriptor sumStat = ResourceDescriptor.initial();
         for (String container : containers) {
-            final ResourceDescriptor resourceDescriptor = dockerStatsService.getStats(container);
+            final ResourceDescriptor resourceDescriptor = dockerStatsService.getConfig(container);
             sumStat = sumStat.add(resourceDescriptor);
         }
 
