@@ -1,0 +1,10 @@
+x-hsb-username: 'czoeller'
+version: '2.2'
+services:
+  web:
+    image: "postgres:latest"
+    container_name: "postgres"
+    mem_limit: 50M
+    cpu_shares: 5
+    blkio_config:
+      weight: 300

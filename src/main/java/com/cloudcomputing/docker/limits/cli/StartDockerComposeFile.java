@@ -1,6 +1,7 @@
 package com.cloudcomputing.docker.limits.cli;
 
 import com.cloudcomputing.docker.limits.api.DockerComposeFacade;
+import com.cloudcomputing.docker.limits.services.resource.NotEnoughResourcesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -23,7 +24,12 @@ class StartDockerComposeFile {
     public void start(@ShellOption(help = "relative path to docker-compose file") final String dockerComposeFilePath) {
         final File dockerComposeFile = new File(".", dockerComposeFilePath);
         validateFile(dockerComposeFile);
-        dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
+        try{
+            dockerComposeFacade.startDockerComposeFile(dockerComposeFile);
+        }
+        catch (NotEnoughResourcesException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @ShellMethod(value = "Start predefined docker-compose file (for demo)")

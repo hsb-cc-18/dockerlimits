@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@Loggable
 public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceAuthorizeServiceImpl.class);
@@ -39,10 +38,12 @@ public class ResourceAuthorizeServiceImpl implements ResourceAuthorizeService {
                 && cpu_sharesFits(wouldAllocResources, limits)
                 && blkio_weightFits(wouldAllocResources, limits)
         ) {
+            logger.debug("resources fits, all right.", requestedResources);
             isAuthorized = true;
         } else {
             isAuthorized = false;
             logger.debug("Request exceeds limit: requested resources {} does not fit.", requestedResources);
+            throw new NotEnoughResourcesException(wouldAllocResources,limits);
         }
 
         return isAuthorized;
