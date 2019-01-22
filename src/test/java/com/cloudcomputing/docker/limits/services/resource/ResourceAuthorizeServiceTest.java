@@ -57,7 +57,7 @@ public class ResourceAuthorizeServiceTest {
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("9G", 10, 100));
 
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 9000,00 MB RAM.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 9000.00 MB RAM.");
 
     }
 
@@ -67,7 +67,7 @@ public class ResourceAuthorizeServiceTest {
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 100));
 
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000,00 MB RAM.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000.00 MB RAM.");
     }
 
     @Test
@@ -77,6 +77,6 @@ public class ResourceAuthorizeServiceTest {
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 600));
 
 
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000,00 MB RAM, 200 of Block IO.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000.00 MB RAM, 200 of Block IO.");
     }
 }
