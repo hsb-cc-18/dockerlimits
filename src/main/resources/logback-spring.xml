@@ -18,6 +18,7 @@
 
     <springProfile name="prod">
         <logger name="com.cloudcomputing.docker" level="WARN"/>
+        <logger name="com.palantir.docker.compose.connection.waiting" level="WARN"/>
     </springProfile>
 
 </configuration>
