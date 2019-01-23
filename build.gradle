@@ -119,4 +119,4 @@ task copyTask(type: Copy) {
     from "$projectDir/src/test/resources"
     into "$buildDir/classes/java/main"
 }
-copyTask.dependsOn build
+copyTask.dependsOn classes
