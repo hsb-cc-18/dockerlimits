@@ -2,6 +2,8 @@ package com.cloudcomputing.docker.limits.model.stats;
 
 
 import de.xn__ho_hia.storage_unit.Megabyte;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,7 +21,16 @@ public class ResourceDescriptor {
     private Integer blkio_weight;
 
     public ResourceDescriptor(String mem_limit, Integer cpu_shares, Integer blkio_weight) {
+        this(cpu_shares, blkio_weight);
         this.mem_limit = Megabyte.valueOf(toBytes(mem_limit));
+    }
+
+    public ResourceDescriptor(Megabyte mem_limit, Integer cpu_shares, Integer blkio_weight) {
+        this(cpu_shares, blkio_weight);
+        this.mem_limit = mem_limit;
+    }
+
+    private ResourceDescriptor(Integer cpu_shares, Integer blkio_weight) {
         this.cpu_shares = cpu_shares;
         this.blkio_weight = blkio_weight;
     }
@@ -31,7 +42,14 @@ public class ResourceDescriptor {
     public ResourceDescriptor add(@Nonnull ResourceDescriptor other) {
         int cpu_shares = this.cpu_shares + other.cpu_shares;
         int blkio_weight = this.blkio_weight + other.blkio_weight;
-        return new ResourceDescriptor(this.mem_limit.add(other.mem_limit).toString(), cpu_shares, blkio_weight);
+        return new ResourceDescriptor(this.mem_limit.add(other.mem_limit), cpu_shares, blkio_weight);
+    }
+
+    public ResourceDescriptor subtract(@Nonnull ResourceDescriptor other) {
+        int cpu_shares = this.cpu_shares - other.cpu_shares;
+        int blkio_weight = this.blkio_weight - other.blkio_weight;
+        long memory_limit = this.mem_limit.longValue() - other.mem_limit.longValue();
+        return new ResourceDescriptor(this.mem_limit.subtract(other.mem_limit), cpu_shares, blkio_weight);
     }
 
     public Megabyte getMem_limit() {
@@ -49,7 +67,7 @@ public class ResourceDescriptor {
     // https://stackoverflow.com/questions/12090598/parsing-human-readable-filesizes-in-java-to-bytes
     public static long toBytes(String filesize) {
         long returnValue = -1;
-        Pattern patt = Pattern.compile("([\\d]+)[,]?+[\\d]*+.*?([GMK]+)", Pattern.CASE_INSENSITIVE);
+        Pattern patt = Pattern.compile("([\\d]+)[,]?+[\\d]*+.*?([GMKB]+)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = patt.matcher(filesize);
         Map<String, Integer> powerMap = new HashMap<>();
         powerMap.put("G", 3);
@@ -58,6 +76,7 @@ public class ResourceDescriptor {
         powerMap.put("MB", 2);
         powerMap.put("K", 1);
         powerMap.put("KB", 1);
+        powerMap.put("B", 0);
 
         BigDecimal bytes;
         if (matcher.find()) {
@@ -69,7 +88,9 @@ public class ResourceDescriptor {
         } else {
             bytes = new BigDecimal(filesize);
         }
-
+        if(filesize.charAt(0) == '-') {
+            bytes = bytes.negate();
+        }
         returnValue = bytes.longValue();
         return returnValue;
     }
@@ -77,5 +98,27 @@ public class ResourceDescriptor {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ResourceDescriptor that = (ResourceDescriptor) o;
+
+        return new EqualsBuilder().append(getMem_limit(), that.getMem_limit())
+                                  .append(getCpu_shares(), that.getCpu_shares())
+                                  .append(getBlkio_weight(), that.getBlkio_weight())
+                                  .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(getMem_limit())
+                                          .append(getCpu_shares())
+                                          .append(getBlkio_weight())
+                                          .toHashCode();
     }
 }

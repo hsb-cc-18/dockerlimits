@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {
         InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
@@ -52,31 +51,50 @@ public class ResourceAuthorizeServiceTest {
     }
 
     @Test
-    public void returnsFalseIfNotEnoughMemory() {
+    public void returnsTrueIfEnoughMemory() {
+
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("0M", 0, 0));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("1G", 0, 0));
+
+        final boolean check = resourceAuthorizeService.isAuthorized(dockerCompose);
+        assertThat(check).isTrue();
+    }
+
+    @Test
+    public void throwsIfNotEnoughMemory() {
         when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
         when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("9G", 10, 100));
 
         assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 9000.00 MB RAM.");
-
     }
 
     @Test
-    public void returnsFalseIfNotEnoughCpuShares() {
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+    public void throwsIfNotEnoughCpuShares() {
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("2G", 20, 500));
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("20M", 100, 100));
 
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000.00 MB RAM.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares.");
     }
 
     @Test
-    public void returnsFalseIfNotEnoughBlkioWeight() {
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+    public void throwsIfNotEnoughBlkioWeight() {
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("2G", 20, 500));
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 600));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("20M", 10, 600));
 
-
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000.00 MB RAM, 200 of Block IO.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 200 of Block IO.");
     }
+
+    @Test
+    public void throwsIfMultipleErrors() {
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("2G", 20, 500));
+        when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("20M", 600, 600));
+
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 590 of CPU shares, 200 of Block IO.");
+    }
+
 }
