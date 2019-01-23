@@ -63,20 +63,20 @@ public class ResourceAuthorizeServiceTest {
 
     @Test
     public void returnsFalseIfNotEnoughCpuShares() {
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("2G", 20, 500));
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 100));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("20M", 100, 100));
 
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000.00 MB RAM.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares.");
     }
 
     @Test
     public void returnsFalseIfNotEnoughBlkioWeight() {
-        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("1G", 20, 500));
+        when(limitsQueryService.getLimitsForUsername(any())).thenReturn(new ResourceDescriptor("2G", 20, 500));
         when(resourceUsageService.sumResourceUsage(any())).thenReturn(new ResourceDescriptor("1G", 10, 100));
-        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("2G", 100, 600));
+        when(dockerComposeResourceAnalyzerService.sumResources(any())).thenReturn(new ResourceDescriptor("20M", 10, 600));
 
 
-        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 90 of CPU shares, 2000.00 MB RAM, 200 of Block IO.");
+        assertThatCode(()-> resourceAuthorizeService.isAuthorized(dockerCompose)).hasMessage("Please reduce your requested resources by 200 of Block IO.");
     }
 }
