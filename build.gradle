@@ -23,7 +23,7 @@ apply plugin: 'io.spring.dependency-management'
 apply from: rootProject.file('gradle/codecov.gradle')
 
 group 'com.cloudcomputing.docker'
-version '1.0'
+version '2.0-SNAPSHOT'
 mainClassName = 'com.cloudcomputing.docker.limits.Application'
 
 sourceCompatibility = 1.8
